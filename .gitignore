@@ -3,3 +3,6 @@ __pycache__/
 
 # ignore the log file
 recon_helper.log
+
+# ignore the result files
+samples/base_dir1/result/*

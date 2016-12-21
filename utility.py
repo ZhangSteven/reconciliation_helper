@@ -76,7 +76,20 @@ def get_input_directory():
 	Read directory from the config object and return it.
 	"""
 	global config
-	directory = config['input']['directory']
+	directory = config['directory']['input']
+	if directory.strip() == '':
+		directory = get_current_path()
+
+	return directory
+
+
+
+def get_output_directory():
+	"""
+	Read directory from the config object and return it.
+	"""
+	global config
+	directory = config['directory']['output']
 	if directory.strip() == '':
 		directory = get_current_path()
 
