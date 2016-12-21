@@ -6,3 +6,4 @@ recon_helper.log
 
 # ignore the result files
 samples/base_dir1/result/*
+samples/base_dir2/result/*

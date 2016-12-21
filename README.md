@@ -14,3 +14,11 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 
 
+
+++++++++++
+ver 0.1
+++++++++++
+1. Read input files, call converter program for jpm, bochk and dif (trustee).
+
+
+

@@ -6,13 +6,15 @@
 
 from datetime import datetime
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, isdir, join
 from xlrd import open_workbook
 from reconciliation_helper.utility import logger, get_current_path, \
-											get_output_directory
+											get_output_directory, \
+											get_input_directory
 from reconciliation_helper.record import get_new_files, save_result
 from jpm import open_jpm
 from bochk import open_bochk
+from DIF import open_dif
 
 
 
@@ -45,6 +47,10 @@ def search_files(base_dir, output_dir):
 
 	files = {}
 	for folder in sub_folders:
+		if not isdir(join(base_dir, folder)):
+			# print(folder)
+			continue
+
 		local_dir = join(base_dir, folder)
 		if local_dir == output_dir:
 			continue
@@ -66,6 +72,7 @@ def search_files(base_dir, output_dir):
 
 
 def convert(files, output_dir):
+	logger.debug('convert(): output to: {0}'.format(output_dir))
 	func_map = {
 		'clo equity': convert_jpm,
 		'listco equity': convert_jpm,
@@ -137,7 +144,15 @@ def convert_bochk(file_list, output_dir, pass_list, fail_list):
 
 
 def convert_trustee(file_list, output_dir, pass_list, fail_list):
-	pass
+	for filename in file_list:
+		port_values = {}
+		try:
+			open_dif.open_dif(filename, port_values, output_dir)
+		except:
+			logger.exception('convert_trustee()')
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
 
 
 
@@ -170,10 +185,8 @@ if __name__ == '__main__':
 	# if not os.path.exists(filename):
 	# 	print('{0} does not exist'.format(filename))
 	# 	sys.exit(1)
-
-	base_dir = get_current_path() + '\\samples'
 	output_dir = get_output_directory()
-	files = search_files(base_dir, output_dir)
+	files = search_files(get_input_directory(), output_dir)
 	result = convert(files, output_dir)
 	save_result(result)
 	upload_result = upload(result)

@@ -41,7 +41,7 @@ class TestRecon(unittest2.TestCase):
 
 
 
-    def test_convert(self):
+    def test_convert_jpm(self):
         files = {'ListCo Equity': [join(get_current_path(), 'samples', 'base_dir1', 'ListCo Equity', 'Positions1219.xlsx'), \
                                     join(get_current_path(), 'samples', 'base_dir1', 'CLO Equity', 'positions - 20161130.xls'), \
                                     join(get_current_path(), 'samples', 'base_dir1', 'CLO Equity', 'JP Morgan Broker Statement 2016-07-06.xls')]}
@@ -56,7 +56,7 @@ class TestRecon(unittest2.TestCase):
 
 
 
-    def test_convert2(self):
+    def test_convert_bochk(self):
         files = {'Concord': \
                     [join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'Holding _ 19122016.xls'), \
                         join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'Cash Stt _ 19122016.xls'), \
@@ -73,6 +73,19 @@ class TestRecon(unittest2.TestCase):
         self.assertEqual(result['pass'][2], files['Concord'][2])
         self.assertEqual(result['fail'][0], files['Concord'][3])
 
+
+
+    def test_convert_trustee(self):
+        files = {'DIF': \
+                    [join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-12.xls'), \
+                        join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-15.xls')]}
+        output_dir = join(get_current_path(), 'samples', 'base_dir2', 'result')
+        result = convert(files, output_dir)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result['fail']), 0)
+        self.assertEqual(len(result['pass']), 2)
+        self.assertEqual(result['pass'][0], files['DIF'][0])
+        self.assertEqual(result['pass'][1], files['DIF'][1])
 
 
 
