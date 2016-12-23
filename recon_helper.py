@@ -11,7 +11,7 @@ from xlrd import open_workbook
 from reconciliation_helper.utility import logger, get_current_path, \
 											get_output_directory, \
 											get_input_directory
-from reconciliation_helper.record import get_new_files, save_result
+from reconciliation_helper.record import filter_files, save_result
 from jpm import open_jpm
 from bochk import open_bochk
 from DIF import open_dif
@@ -72,6 +72,11 @@ def search_files(base_dir, output_dir):
 
 
 def convert(files, output_dir):
+	"""
+	Convert input files from different sources to Geneva format.
+
+	files: {<sub_folder_name>:[list of files under that folder]}
+	"""
 	logger.debug('convert(): output to: {0}'.format(output_dir))
 	func_map = {
 		'clo equity': convert_jpm,
@@ -91,7 +96,7 @@ def convert(files, output_dir):
 			logger.error('convert(): no handler found for sub folder: {0}'.format(sub_folder))
 			raise HandlerNotFound()
 
-		handler(get_new_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
+		handler(filter_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
 
 	return result
 

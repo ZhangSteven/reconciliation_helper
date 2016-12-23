@@ -30,10 +30,15 @@ class TestRecon(unittest2.TestCase):
 
 
     def test_search_file(self):
+        """
+        Use samples\base_dir1 to test.
+        """
         base_dir = join(get_current_path(), 'samples', 'base_dir1')
         output_dir = join(get_current_path(), 'samples', 'base_dir1', 'result')
         files = search_files(base_dir, output_dir)
         self.assertTrue(self.verify_sub_folders(list(files.keys())))
+
+        # sub folders under Concord is not counted, only files
         self.assertEqual(len(files['Concord']), 4)
         self.assertEqual(len(files['ListCo Equity']), 1)
         self.assertEqual(len(files['CLO Equity']), 2)
