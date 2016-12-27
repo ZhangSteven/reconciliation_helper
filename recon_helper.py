@@ -87,7 +87,7 @@ def convert(files, output_dir):
 		'dif': convert_trustee,
 		'special event fund': convert_bochk
 	}
-	result = {'pass':[], 'fail':[]}
+	result = {'process':[], 'pass':[], 'fail':[], 'ignore':[]}
 
 	for sub_folder in files:
 		try:
@@ -96,7 +96,8 @@ def convert(files, output_dir):
 			logger.error('convert(): no handler found for sub folder: {0}'.format(sub_folder))
 			raise HandlerNotFound()
 
-		handler(filter_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
+		filter_files(files[sub_folder], result['process'], result['ignore'])
+		handler(result['process'], output_dir, result['pass'], result['fail'])
 
 	return result
 

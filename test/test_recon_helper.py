@@ -7,6 +7,8 @@ from datetime import datetime
 from os.path import join
 from reconciliation_helper.utility import get_current_path
 from reconciliation_helper.recon_helper import search_files, convert
+from reconciliation_helper.record import enable_test_mode, save_result
+from reconciliation_helper.test.test_record import setup_test_db
 
 
 
@@ -14,6 +16,10 @@ class TestRecon(unittest2.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestRecon, self).__init__(*args, **kwargs)
+        conn = setup_test_db()
+        enable_test_mode(conn)
+
+
 
     def setUp(self):
         """
@@ -39,7 +45,7 @@ class TestRecon(unittest2.TestCase):
         self.assertTrue(self.verify_sub_folders(list(files.keys())))
 
         # sub folders under Concord is not counted, only files
-        self.assertEqual(len(files['Concord']), 4)
+        self.assertEqual(len(files['Concord']), 5)
         self.assertEqual(len(files['ListCo Equity']), 1)
         self.assertEqual(len(files['CLO Equity']), 2)
         self.assertEqual(files['ListCo Equity'][0], join(base_dir, 'ListCo Equity', 'Positions1219.xlsx'))
@@ -52,9 +58,11 @@ class TestRecon(unittest2.TestCase):
                                     join(get_current_path(), 'samples', 'base_dir1', 'CLO Equity', 'JP Morgan Broker Statement 2016-07-06.xls')]}
         output_dir = join(get_current_path(), 'samples', 'base_dir1', 'result')
         result = convert(files, output_dir)
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result['process']), 3)
         self.assertEqual(len(result['fail']), 0)
         self.assertEqual(len(result['pass']), 3)
+        self.assertEqual(len(result['ignore']), 0)
         self.assertEqual(result['pass'][0], files['ListCo Equity'][0])
         self.assertEqual(result['pass'][1], files['ListCo Equity'][1])
         self.assertEqual(result['pass'][2], files['ListCo Equity'][2])
@@ -66,18 +74,21 @@ class TestRecon(unittest2.TestCase):
                     [join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'Holding _ 19122016.xls'), \
                         join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'Cash Stt _ 19122016.xls'), \
                         join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'Cash Stt _ 13122016.xls'), \
-                        join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'sample.txt')]}
+                        join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'sample.txt'), \
+                        join(get_current_path(), 'samples', 'base_dir1', 'Concord', 'Holding _ 20122016.xls')]}
         
         output_dir = join(get_current_path(), 'samples', 'base_dir1', 'result')
         result = convert(files, output_dir)
-        self.assertEqual(len(result), 2)
-        self.assertEqual(len(result['fail']), 1)
+        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result['process']), 4)
         self.assertEqual(len(result['pass']), 3)
+        self.assertEqual(len(result['fail']), 1)
+        self.assertEqual(len(result['ignore']), 0)
         self.assertEqual(result['pass'][0], files['Concord'][0])
         self.assertEqual(result['pass'][1], files['Concord'][1])
         self.assertEqual(result['pass'][2], files['Concord'][2])
-        self.assertEqual(result['fail'][0], files['Concord'][3])
-
+        self.assertEqual(result['fail'][0], files['Concord'][4])
+        save_result(result)
 
 
     def test_convert_trustee(self):
@@ -86,12 +97,18 @@ class TestRecon(unittest2.TestCase):
                         join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-15.xls')]}
         output_dir = join(get_current_path(), 'samples', 'base_dir2', 'result')
         result = convert(files, output_dir)
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result['process']), 2)
         self.assertEqual(len(result['fail']), 0)
         self.assertEqual(len(result['pass']), 2)
+        self.assertEqual(len(result['ignore']), 0)
         self.assertEqual(result['pass'][0], files['DIF'][0])
         self.assertEqual(result['pass'][1], files['DIF'][1])
+        save_result(result)
 
+        result = convert(files, output_dir)
+        save_result(result)
+        
 
 
     def verify_sub_folders(self, sub_folders):
