@@ -14,6 +14,25 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 
 
+++++++++++
+Todo
+++++++++++
+1. Do we need to move testing mode to config file? or some default parameter to functions.
+
+2. Add force process options, so that we can force process files in a certain folder, and/or whose last modified date is not older X days than that in the record.
+
+
+
+++++++++++
+ver 0.2
+++++++++++
+1. A sqlite3 database is used to record the file process status, so that only new files or updated files are processed. The database contains two tables:
+	
+	a. file process status (file, last modified time, pass or fail)
+	b. list of process operations (id, file, last modified time, process time, pass or fail)
+
+	It is designed like this because later we may need to force process files no matter whether they are newer or is updated since last processed.
+
 
 ++++++++++
 ver 0.1

@@ -11,7 +11,8 @@ from xlrd import open_workbook
 from reconciliation_helper.utility import logger, get_current_path, \
 											get_output_directory, \
 											get_input_directory
-from reconciliation_helper.record import filter_files, save_result
+from reconciliation_helper.record import filter_files, save_result, \
+											get_db_connection
 from jpm import open_jpm
 from bochk import open_bochk
 from DIF import open_dif
@@ -185,14 +186,10 @@ def create_summary(result, upload_result):
 
 
 if __name__ == '__main__':
-	
-	# filename = get_input_directory() + '\\' + sys.argv[1]
-	# if not os.path.exists(filename):
-	# 	print('{0} does not exist'.format(filename))
-	# 	sys.exit(1)
 	output_dir = get_output_directory()
 	files = search_files(get_input_directory(), output_dir)
 	result = convert(files, output_dir)
 	save_result(result)
+	get_db_connection().close()
 	upload_result = upload(result)
 	create_summary(result, upload_result)

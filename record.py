@@ -57,6 +57,7 @@ def save_result(result):
 					process_records)
 	# c.execute('SELECT * FROM process_result')
 	# print(c.fetchall())
+	get_db_connection().commit()
 
 
 
@@ -89,7 +90,7 @@ def get_db_connection():
 			get_db_connection.conn = get_test_db_connection()
 		else:
 			logger.info('get_db_connection(): connect to database: records.db')
-			get_db_connection.conn = sqlite3.connect('records.db')
+			get_db_connection.conn = sqlite3.connect(os.path.join(get_current_path(), 'records.db'))
 
 	return get_db_connection.conn
 
