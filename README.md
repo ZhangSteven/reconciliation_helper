@@ -21,6 +21,8 @@ Todo
 
 2. Add force process options, so that we can force process files in a certain folder, and/or whose last modified date is not older X days than that in the record.
 
+3. Remove the database from .gitignore, but add a small tool to show its content, and delete all its contents.
+
 
 
 ++++++++++
