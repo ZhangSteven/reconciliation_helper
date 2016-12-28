@@ -11,26 +11,32 @@ from reconciliation_helper.utility import logger, get_current_path
 
 
 
-def filter_files(file_list, process_list, ignore_list):
+def filter_files(file_list):
 	"""
 	Pick the approapriate files from the file list based on the following
 	criteria:
 
 	1. Format: files must be in 'xls' or 'xlsx' format.
-	2. Not successful before: files not found in the successful file list
-	3. Last modified time stamp: if a file is in the successful file list,
-		but its last modified time stamp is newer than that in the record.
+	2. Not processed before: files not found in the file_status table.
+	3. Updated since last processed: if a file was processed before, i.e.,
+		in the file_status table, but its last modified time stamp is newer 
+		than that in the record.
 	"""
+	process_list = []
 	for file in file_list:
 		if has_valid_extension(file):
 			m_datetime = get_file_timestamp(file)
-			if m_datetime is None:	# this file is not in record
+			if m_datetime is None:	# not processed before
 				process_list.append(file)
-			else:
-				if modified_later_than_record(file, m_datetime):
-					process_list.append(file)
-				else:
-					ignore_list.append(file)
+			elif modified_later_than_record(file, m_datetime):
+				process_list.append(file)
+			# else:
+			# 	logger.debug('filter_files(): {0} ignored'.format(file))
+		else:
+			logger.debug('filter_files(): {0} does not have valid extension'.
+							format(file))
+			
+	return process_list
 
 
 
@@ -38,18 +44,29 @@ def save_result(result):
 	"""
 	Save the result to database.
 	"""
-	c = get_db_connection().cursor()
-	pass_records = create_pass_records(result['pass'])
-	c.executemany('INSERT OR REPLACE INTO pass_files (file_fullpath, m_time) VALUES (?, ?)', \
-					pass_records)
+	c = get_db_cursor()
+	pass_records = create_status_records(result['pass'], 'pass')
+	fail_records = create_status_records(result['fail'], 'fail')
+	c.executemany('INSERT OR REPLACE INTO file_status (file_fullpath, m_time, status) VALUES (?, ?, ?)', \
+					pass_records+fail_records)
 
-	c.execute('SELECT * FROM pass_files')
+	c.execute('SELECT * FROM file_status')
 	print(c.fetchall())
-	process_records = create_process_records(result['pass'], result['fail'], result['ignore'])
-	c.executemany('INSERT INTO process_files (file_fullpath, m_time, record_time, result) VALUES (?, ?, ?, ?)', \
+	process_records = create_process_records(result['pass'], result['fail'])
+	c.executemany('INSERT INTO process_result (file_fullpath, m_time, record_time, result) VALUES (?, ?, ?, ?)', \
 					process_records)
-	c.execute('SELECT * FROM process_files')
+	c.execute('SELECT * FROM process_result')
 	print(c.fetchall())
+
+
+
+cursor = None
+def get_db_cursor():
+	global cursor
+	if cursor is None:
+		cursor = get_db_connection().cursor()
+
+	return cursor
 
 
 
@@ -105,24 +122,27 @@ def has_valid_extension(file):
 
 
 
-def create_pass_records(pass_files):
+def create_status_records(file_list, status):
+	"""
+	create records to be populated into table file_status.
+	"""
 	records = []
-	for file in pass_files:
+	for file in file_list:
 		time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', 
 									time.localtime(get_modified_time_stamp(file)))
-		records.append((file, time_stamp))
+		records.append((file, time_stamp, status))
 
 	return records
 
 
 
-def create_process_records(pass_list, fail_list, ignore_list):
+def create_process_records(pass_list, fail_list):
 	records = []
 	record_timestamp = time.strftime('%Y-%m-%d %H:%M:%S', 
 									time.localtime(time.time()))
 	create_process_records_detail(records, pass_list, record_timestamp, 'pass')
 	create_process_records_detail(records, fail_list, record_timestamp, 'fail')
-	create_process_records_detail(records, ignore_list, record_timestamp, 'ignore')
+	# create_process_records_detail(records, ignore_list, record_timestamp, 'ignore')
 	return records
 
 
@@ -142,13 +162,14 @@ def get_modified_time_stamp(file):
 
 def modified_later_than_record(file, m_datetime):
 	"""
-	Test whether a file's last modified time is later than that in the record.
+	Test whether a file is updated since the last time it was processed and
+	recorded in the database file_status table.
 	"""
 	# when a file's last modified time is saved into database, its precision
 	# is up to one second. E.g., its last modified time is 2012-7-8 2:15:10.999,
-	# it is recored as 2012-7-8 2:15:10. The 0.999 second is gone. So only
-	# when a file's last modified time is 1 seond newer than the record, we'll
-	# consider it a newer file.
+	# it is recored as 2012-7-8 2:15:10. The 0.999 second is gone. So unless
+	# a file's last modified time is at least 1 seond newer than the record, 
+	# we won't consider the file is newer.
 	if datetime.fromtimestamp(get_modified_time_stamp(file)) - m_datetime > \
 		timedelta(seconds=1):
 		return True
@@ -159,22 +180,22 @@ def modified_later_than_record(file, m_datetime):
 
 def get_file_timestamp(file):
 	"""
-	Read the file modified date and time from database and return a 
-	datetime object to represent it.
+	From the "file_status" table read the last modified datetime for the file,
+	if the file does not exist (not processed before), then return None.
 	"""
-	c = get_db_connection().cursor()
+	c = get_db_cursor()
 	t = (file, )
-	c.execute('SELECT * FROM pass_files WHERE file_fullpath=?', t)
+	c.execute('SELECT * FROM file_status WHERE file_fullpath=?', t)
 	result = c.fetchone()
 
 	if result is None:
 		return None
 	else:
-		return convert_string_to_datetime(result[1])
+		return dt_string_to_datetime(result[1])
 
 
 
-def convert_string_to_datetime(dt_string):
+def dt_string_to_datetime(dt_string):
 	"""
 	convert a string in 'yyyy-mm-dd hh:mm:ss' format to a datetime
 	object.

@@ -45,12 +45,13 @@ def setup_test_db():
     """
     conn = sqlite3.connect(':memory:')
     c = conn.cursor()
-    sql = '''CREATE TABLE pass_files \
+    sql = '''CREATE TABLE file_status \
                 (file_fullpath TEXT PRIMARY KEY NOT NULL, \
-                m_time TEXT NOT NULL)'''
+                m_time TEXT NOT NULL, \
+                status TEXT NOT NULL)'''
     c.execute(sql)
 
-    sql = '''CREATE TABLE process_files \
+    sql = '''CREATE TABLE process_result \
                 (id INTEGER PRIMARY KEY NOT NULL, \
                     file_fullpath TEXT NOT NULL, \
                     m_time TEXT NOT NULL, \
