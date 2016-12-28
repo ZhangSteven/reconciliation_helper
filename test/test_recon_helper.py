@@ -87,6 +87,7 @@ class TestRecon(unittest2.TestCase):
         save_result(result)
 
 
+
     def test_convert_trustee(self):
         files = {'DIF': \
                     [join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-12.xls'), \
@@ -98,9 +99,6 @@ class TestRecon(unittest2.TestCase):
         self.assertEqual(len(result['pass']), 2)
         self.assertEqual(result['pass'][0], files['DIF'][0])
         self.assertEqual(result['pass'][1], files['DIF'][1])
-        save_result(result)
-
-        result = convert(files, output_dir)
         save_result(result)
         
 

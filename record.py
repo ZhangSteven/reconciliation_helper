@@ -60,29 +60,38 @@ def save_result(result):
 
 
 
-cursor = None
 def get_db_cursor():
-	global cursor
-	if cursor is None:
-		cursor = get_db_connection().cursor()
+	"""
+	Use a function static variable to store something that needs to be
+	initialized once, and reused later.
 
-	return cursor
+	Code example see:
+	http://stackoverflow.com/questions/279561/what-is-the-python-equivalent-of-static-variables-inside-a-function
+	"""
+	if 'cursor' not in get_db_cursor.__dict__:
+		get_db_cursor.cursor = None
+
+	if get_db_cursor.cursor is None:
+		get_db_cursor.cursor = get_db_connection().cursor()
+
+	return get_db_cursor.cursor
 
 
 
-conn = None
 def get_db_connection():
-	global conn
-	if conn is None:
+	if 'conn' not in get_db_connection.__dict__:
+		get_db_connection.conn = None
+
+	if get_db_connection.conn is None:
 		global test_mode
 		if test_mode:
 			logger.info('get_db_connection(): connect to test database')
-			conn = get_test_db_connection()
+			get_db_connection.conn = get_test_db_connection()
 		else:
 			logger.info('get_db_connection(): connect to database: records.db')
-			conn = sqlite3.connect('records.db')
+			get_db_connection.conn = sqlite3.connect('records.db')
 
-	return conn
+	return get_db_connection.conn
 
 
 
