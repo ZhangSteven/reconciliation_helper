@@ -50,13 +50,13 @@ def save_result(result):
 	c.executemany('INSERT OR REPLACE INTO file_status (file_fullpath, m_time, status) VALUES (?, ?, ?)', \
 					pass_records+fail_records)
 
-	c.execute('SELECT * FROM file_status')
-	print(c.fetchall())
+	# c.execute('SELECT * FROM file_status')
+	# print(c.fetchall())
 	process_records = create_process_records(result['pass'], result['fail'])
 	c.executemany('INSERT INTO process_result (file_fullpath, m_time, record_time, result) VALUES (?, ?, ?, ?)', \
 					process_records)
-	c.execute('SELECT * FROM process_result')
-	print(c.fetchall())
+	# c.execute('SELECT * FROM process_result')
+	# print(c.fetchall())
 
 
 
