@@ -57,8 +57,43 @@ class TestRecords(unittest2.TestCase):
 
 
 
-    # def test_filter_files(self):
-    # 	file_list = [join(local_dir, f) for f in os.listdir(local_dir) if isfile(join(local_dir, f))]
+    def delete_files(self):
+        shutil.rmtree(join(get_base_dir(), 'Concord'))
+        os.remove(join(get_base_dir(), 'DIF', 'CL Franklin DIF 2016-12-15.xls'))
+
+
+
+    def test_filter_files(self):
+        self.setup_dir()
+        files = search_files(get_base_dir(), get_output_dir())
+        save_result(convert(files, get_output_dir()))
+
+        self.overwrite_file()
+        files = search_files(get_base_dir(), get_output_dir())
+
+        for sub_folder in files:
+            file_list = filter_files(files[sub_folder])
+            if sub_folder == 'Concord':
+            	self.assertEqual(len(file_list), 1)
+            else:
+            	self.assertEqual(len(file_list), 0)
+        save_result(convert(files, get_output_dir()))
+
+        self.copy_more_files()
+        files = search_files(get_base_dir(), get_output_dir())
+        for sub_folder in files:
+            file_list = filter_files(files[sub_folder])
+            if sub_folder == 'DIF':
+                self.assertEqual(len(file_list), 2)
+            else:
+                self.assertEqual(len(file_list), 0)
+        save_result(convert(files, get_output_dir()))
+
+        self.delete_files()
+        files = search_files(get_base_dir(), get_output_dir())
+        for sub_folder in files:
+            file_list = filter_files(files[sub_folder])
+            self.assertEqual(len(file_list), 0)
 
 
 
@@ -86,7 +121,7 @@ class TestRecords(unittest2.TestCase):
         self.assertEqual(len(result), 1)
         # print(result[0])
         self.assertEqual(result[0][0], join(get_base_dir(), 'Concord', 'Holding _ 20122016.xls'))
-        self.assertEqual(result[0][1], '2016-12-28 14:45:54')
+        self.assertEqual(result[0][1], '2016-12-28 17:19:48')
 
 
         #
@@ -111,7 +146,7 @@ class TestRecords(unittest2.TestCase):
         		format(join(get_base_dir(), 'Concord', 'Holding _ 20122016.xls'))
         c.execute(sql)
         result = c.fetchone()
-        self.assertEqual(result[1], '2016-12-28 16:01:45')
+        self.assertEqual(result[1], '2016-12-28 17:43:16')
         self.assertEqual(result[2], 'pass')
 
         sql = '''SELECT * FROM process_result'''
@@ -120,7 +155,7 @@ class TestRecords(unittest2.TestCase):
 
         sql = '''SELECT * FROM process_result where file_fullpath="{0}" and m_time="{1}"'''.\
         		format(join(get_base_dir(), 'Concord', 'Holding _ 20122016.xls'), \
-        				'2016-12-28 16:01:45')
+        				'2016-12-28 17:43:16')
         c.execute(sql)
         result = c.fetchone()
         # print(result)
@@ -156,15 +191,14 @@ class TestRecords(unittest2.TestCase):
         result = c.fetchall()
         # print(result)
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0][0], '2016-12-28 14:45:54')
+        self.assertEqual(result[0][0], '2016-12-16 18:22:51')
         self.assertEqual(result[0][1], 'pass')
 
 
         #
         # now delete some files
         #
-        shutil.rmtree(join(get_base_dir(), 'Concord'))
-        os.remove(join(get_base_dir(), 'DIF', 'CL Franklin DIF 2016-12-15.xls'))
+        self.delete_files()
         files = search_files(get_base_dir(), get_output_dir())
         save_result(convert(files, get_output_dir()))
 
@@ -177,7 +211,7 @@ class TestRecords(unittest2.TestCase):
         		format(join(get_base_dir(), 'Concord', 'Holding _ 20122016.xls'))
         c.execute(sql)
         result = c.fetchone()
-        self.assertEqual(result[1], '2016-12-28 16:01:45')
+        self.assertEqual(result[1], '2016-12-28 17:43:16')
         self.assertEqual(result[2], 'pass')
 
         sql = '''SELECT * FROM process_result'''
@@ -190,7 +224,7 @@ class TestRecords(unittest2.TestCase):
         result = c.fetchall()
         # print(result)
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0][0], '2016-12-28 14:45:54')
+        self.assertEqual(result[0][0], '2016-12-16 18:22:51')
         self.assertEqual(result[0][1], 'pass')
 
 

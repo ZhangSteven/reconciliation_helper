@@ -1,0 +1,7 @@
+
+ Crypt_CreateKeyPairs enter
+ Crypt_CreateKeyPairs del begin
+ Crypt_CreateKeyPairs del end
+ CryptAcquireContext begin
+ CryptAcquireContext error
+ CryptAcquireContext success
