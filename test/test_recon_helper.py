@@ -5,9 +5,9 @@ Test the open_jpm.py
 import unittest2
 from datetime import datetime
 from os.path import join
-from reconciliation_helper.utility import get_current_path
+from reconciliation_helper.utility import get_current_path, enable_test_mode
 from reconciliation_helper.recon_helper import search_files, convert
-from reconciliation_helper.record import enable_test_mode, save_result
+from reconciliation_helper.record import save_result
 from reconciliation_helper.test.test_record import setup_test_db
 
 

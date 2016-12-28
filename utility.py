@@ -58,6 +58,37 @@ def get_base_directory():
 
 
 
+def in_test_mode():
+	"""
+	Determine whether the program runs in test mode. By default it is not.
+	"""
+	global config
+	if not 'test_mode' in config:
+		return False
+	else:
+		return True
+
+
+
+test_conn = None
+def enable_test_mode(db_conn):
+	"""
+	Setup the test_mode flag to True, call this function only when doing unittest.
+	"""
+	global config
+	if not 'test_mode' in config:
+		config['test_mode'] = True
+
+	global test_conn
+	test_conn = db_conn
+
+
+
+def get_test_db_connection():
+	return global test_conn
+
+
+
 def _setup_logging():
     fn = get_base_directory() + '\\' + config['logging']['log_file']
     log_level = config['logging']['log_level']

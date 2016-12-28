@@ -7,7 +7,8 @@
 import sqlite3
 import os, time
 from datetime import datetime, timedelta
-from reconciliation_helper.utility import logger, get_current_path
+from reconciliation_helper.utility import logger, get_current_path, in_test_mode, \
+											enable_test_mode, get_test_db_connection
 
 
 
@@ -84,8 +85,7 @@ def get_db_connection():
 		get_db_connection.conn = None
 
 	if get_db_connection.conn is None:
-		global test_mode
-		if test_mode:
+		if in_test_mode():
 			logger.info('get_db_connection(): connect to test database')
 			get_db_connection.conn = get_test_db_connection()
 		else:
@@ -96,25 +96,25 @@ def get_db_connection():
 
 
 
-test_mode = False
-test_conn = None
-def enable_test_mode(db_conn):
-	"""
-	Only used for test cases, because test mode uses a different database.
-	When test mode is enabled, the testing code creates the testing database,
-	and pass connection to that database here.
-	"""
-	global test_mode
-	test_mode = True
+# test_mode = False
+# test_conn = None
+# def enable_test_mode(db_conn):
+# 	"""
+# 	Only used for test cases, because test mode uses a different database.
+# 	When test mode is enabled, the testing code creates the testing database,
+# 	and pass connection to that database here.
+# 	"""
+# 	global test_mode
+# 	test_mode = True
 
-	global test_conn
-	test_conn = db_conn
+# 	global test_conn
+# 	test_conn = db_conn
 
 
 
-def get_test_db_connection():
-	global test_conn
-	return test_conn
+# def get_test_db_connection():
+# 	global test_conn
+# 	return test_conn
 
 
 

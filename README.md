@@ -19,9 +19,17 @@ Todo
 ++++++++++
 1. Do we need to move testing mode to config file? or some default parameter to functions.
 
-2. Add force process options, so that we can force process files in a certain folder, and/or whose last modified date is not older X days than that in the record.
+2. Add force process options, so that we can force process certain files:
+
+	a. files in a certain folder.
+	b. files whose last modified date is within X days compared that in the record.
+	c. a particular file
 
 3. Remove the database from .gitignore, but add a small tool to show its content, and delete all its contents.
+
+4. Let write_csv() functions return the resulting file path, so that the upload function can use them to upload.
+
+5. Add send email function to notify user about the process results.
 
 
 
@@ -30,10 +38,9 @@ ver 0.2
 ++++++++++
 1. A sqlite3 database is used to record the file process status, so that only new files or updated files are processed. The database contains two tables:
 	
-	a. file process status (file, last modified time, pass or fail)
-	b. list of process operations (id, file, last modified time, process time, pass or fail)
+	a. lastest file process status (file, last modified time, pass or fail)
+	b. all process results (id, file, last modified time, process time, pass or fail)
 
-	It is designed like this because later we may need to force process files no matter whether they are newer or is updated since last processed.
 
 
 ++++++++++

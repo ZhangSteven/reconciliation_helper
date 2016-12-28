@@ -7,11 +7,11 @@ import sqlite3
 from datetime import datetime
 from os.path import isfile, isdir, join
 import shutil, os
-from reconciliation_helper.utility import get_current_path
+from reconciliation_helper.utility import get_current_path, enable_test_mode
 from reconciliation_helper.recon_helper import search_files, convert, \
 												filter_files
-from reconciliation_helper.record import enable_test_mode, save_result, \
-											get_db_connection, get_db_cursor
+from reconciliation_helper.record import save_result, get_db_connection, \
+                                            get_db_cursor
 
 
 
@@ -253,17 +253,17 @@ def setup_test_db():
 
 
 def get_base_dir():
-	return r'C:\Users\steven.zhang\AppData\Local\Programs\Git\git\reconciliation_helper\samples\base_dir'
+	return join(get_current_path(), 'samples', 'base_dir')
 
 
 
 def get_source_dir():
-	return r'C:\Users\STEVEN~1.ZHA\AppData\Local\Programs\Git\git\reconciliation_helper\samples\source'
+	return join(get_current_path(), 'samples', 'source')
 
 
 
 def get_source_dir2():
-	return r'C:\Users\STEVEN~1.ZHA\AppData\Local\Programs\Git\git\reconciliation_helper\samples\source2'
+	return join(get_current_path(), 'samples', 'source2')
 
 
 
