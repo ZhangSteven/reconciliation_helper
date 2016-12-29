@@ -25,11 +25,18 @@ Todo
 	b. files whose last modified date is within X days compared that in the record.
 	c. a particular file
 
-3. Remove the database from .gitignore, but add a small tool to show its content, and delete all its contents.
+3. Add a small tool to show its content, and delete all its contents, maybe just a short description on how to use sqlite3 CLI to do the trick?
 
 4. Let write_csv() functions return the resulting file path, so that the upload function can use them to upload.
 
 5. Add send email function to notify user about the process results.
+
+
+
+++++++++++
+ver 0.21
+++++++++++
+1. Test mode option is added to config file, with a default value set to empty string (not in test mode). When doing unittest, the testing code will set it to something else, to enable test mode. This way we don't need to pollute the code in record.py with the testmode global variable.
 
 
 
