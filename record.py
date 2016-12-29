@@ -51,13 +51,10 @@ def save_result(result):
 	c.executemany('INSERT OR REPLACE INTO file_status (file_fullpath, m_time, status) VALUES (?, ?, ?)', \
 					pass_records+fail_records)
 
-	# c.execute('SELECT * FROM file_status')
-	# print(c.fetchall())
 	process_records = create_process_records(result['pass'], result['fail'])
 	c.executemany('INSERT INTO process_result (file_fullpath, m_time, record_time, result) VALUES (?, ?, ?, ?)', \
 					process_records)
-	# c.execute('SELECT * FROM process_result')
-	# print(c.fetchall())
+
 	get_db_connection().commit()
 
 
@@ -93,28 +90,6 @@ def get_db_connection():
 			get_db_connection.conn = sqlite3.connect(os.path.join(get_current_path(), 'records.db'))
 
 	return get_db_connection.conn
-
-
-
-# test_mode = False
-# test_conn = None
-# def enable_test_mode(db_conn):
-# 	"""
-# 	Only used for test cases, because test mode uses a different database.
-# 	When test mode is enabled, the testing code creates the testing database,
-# 	and pass connection to that database here.
-# 	"""
-# 	global test_mode
-# 	test_mode = True
-
-# 	global test_conn
-# 	test_conn = db_conn
-
-
-
-# def get_test_db_connection():
-# 	global test_conn
-# 	return test_conn
 
 
 

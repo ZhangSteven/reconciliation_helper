@@ -88,7 +88,7 @@ def convert(files, output_dir):
 		'dif': convert_trustee,
 		'special event fund': convert_bochk
 	}
-	result = {'pass':[], 'fail':[]}
+	result = {'pass':[], 'fail':[], 'output':[]}
 
 	for sub_folder in files:
 		try:
@@ -97,31 +97,35 @@ def convert(files, output_dir):
 			logger.error('convert(): no handler found for sub folder: {0}'.format(sub_folder))
 			raise HandlerNotFound()
 		
-		handler(filter_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
+		output = handler(filter_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
+		result['output'] = result['output'] + output
 
 	return result
 
 
 
 def convert_jpm(file_list, output_dir, pass_list, fail_list):
-
+	output_list = []
 	for filename in file_list:
 		port_values = {}
 		try:
 			wb = open_workbook(filename=filename)
 			ws = wb.sheet_by_name('Sheet1')
 			open_jpm.read_jpm(ws, port_values)
-			open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
+			output = open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
+			output_list = output_list + output
 		except:
 			logger.exception('convert_jpm()')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
 
+	return output_list
+
 
 
 def convert_bochk(file_list, output_dir, pass_list, fail_list):
-
+	output_list = []
 	for filename in file_list:
 
 		filename_no_path = filename.split('\\')[-1]
@@ -140,25 +144,32 @@ def convert_bochk(file_list, output_dir, pass_list, fail_list):
 		port_values = {}
 		try:
 			read_handler(filename, port_values)
-			csv_handler(port_values, output_dir, get_filename_prefix(filename, 'bochk'))
+			output = csv_handler(port_values, output_dir, get_filename_prefix(filename, 'bochk'))
+			output_list.append(output)
 		except:
 			logger.exception('convert_bochk()')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
 
+	return output_list
+
 
 
 def convert_trustee(file_list, output_dir, pass_list, fail_list):
+	output_list = []
 	for filename in file_list:
 		port_values = {}
 		try:
-			open_dif.open_dif(filename, port_values, output_dir)
+			output = open_dif.open_dif(filename, port_values, output_dir)
+			output_list = output_list + output
 		except:
 			logger.exception('convert_trustee()')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
+
+	return output_list
 
 
 
@@ -180,7 +191,23 @@ def upload(result):
 
 
 
-def create_summary(result, upload_result):
+def show_result(result, upload_result):
+	print('Passed: {0}, Failed: {1}'.format(len(result['pass']), len(result['fail'])))
+	print('')
+	for file in result['pass']:
+		print('pass: {0}'.format(file))
+
+	print('')
+	for file in result['fail']:
+		print('fail: {0}'.format(file))
+
+	print('output files: {0}'.format(len(result['output'])))
+	for file in result['output']:
+		print('{0}'.format(file))
+
+
+
+def send_notification(result, upload_result):
 	pass
 
 
@@ -192,4 +219,5 @@ if __name__ == '__main__':
 	save_result(result)
 	get_db_connection().close()
 	upload_result = upload(result)
-	create_summary(result, upload_result)
+	show_result(result, upload_result)
+	send_notification(result, upload_result)

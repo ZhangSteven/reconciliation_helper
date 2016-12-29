@@ -31,6 +31,8 @@ Todo
 
 5. Add send email function to notify user about the process results.
 
+6. Add upload result to the database, so that we don't need to upload old files?
+
 
 
 ++++++++++
