@@ -1,0 +1,168 @@
+. 2017-01-01 21:29:08.638 --------------------------------------------------------------------------
+. 2017-01-01 21:29:08.638 WinSCP Version 5.9.3 (Build 7136) (OS 10.0.14393 - Windows 10 Pro)
+. 2017-01-01 21:29:08.638 Configuration: HKCU\Software\Martin Prikryl\WinSCP 2\
+. 2017-01-01 21:29:08.638 Log level: Normal
+. 2017-01-01 21:29:08.638 Local account: xuanyi_thinkpad\shutao
+. 2017-01-01 21:29:08.638 Working directory: C:\Program Files\Git\git\reconciliation_helper
+. 2017-01-01 21:29:08.638 Process ID: 8576
+. 2017-01-01 21:29:08.638 Command-line: "C:\Program Files (x86)\WinSCP\WinSCP.exe" /console=593 /consoleinstance=_6316_278 "/script=C:\Program Files\Git\git\reconciliation_helper\winscp_script\run-sftp_2017-01-01T212908.txt" "/log=C:\Program Files\Git\git\reconciliation_helper\winscp_log\log_2017-01-01T212908.txt" 
+. 2017-01-01 21:29:08.638 Time zone: Current: GMT+8 (China Standard Time), No DST
+. 2017-01-01 21:29:08.638 Login time: Sunday, January 1, 2017 9:29:08 PM
+. 2017-01-01 21:29:08.638 --------------------------------------------------------------------------
+. 2017-01-01 21:29:08.638 Script: Retrospectively logging previous script records:
+> 2017-01-01 21:29:08.638 Script: open sftp://demo:***@test.rebex.net
+. 2017-01-01 21:29:08.638 --------------------------------------------------------------------------
+. 2017-01-01 21:29:08.638 Session name: demo@test.rebex.net (Ad-Hoc site)
+. 2017-01-01 21:29:08.638 Host name: test.rebex.net (Port: 22)
+. 2017-01-01 21:29:08.638 User name: demo (Password: Yes, Key file: No, Passphrase: No)
+. 2017-01-01 21:29:08.638 Tunnel: No
+. 2017-01-01 21:29:08.638 Transfer Protocol: SFTP
+. 2017-01-01 21:29:08.638 Ping type: Off, Ping interval: 30 sec; Timeout: 15 sec
+. 2017-01-01 21:29:08.638 Disable Nagle: No
+. 2017-01-01 21:29:08.638 Proxy: None
+. 2017-01-01 21:29:08.638 Send buffer: 262144
+. 2017-01-01 21:29:08.638 SSH protocol version: 2; Compression: No
+. 2017-01-01 21:29:08.638 Bypass authentication: No
+. 2017-01-01 21:29:08.638 Try agent: Yes; Agent forwarding: No; TIS/CryptoCard: No; KI: Yes; GSSAPI: No
+. 2017-01-01 21:29:08.638 Ciphers: aes,chacha20,blowfish,3des,WARN,arcfour,des; Ssh2DES: No
+. 2017-01-01 21:29:08.638 KEX: ecdh,dh-gex-sha1,dh-group14-sha1,rsa,WARN,dh-group1-sha1
+. 2017-01-01 21:29:08.638 SSH Bugs: Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto
+. 2017-01-01 21:29:08.638 Simple channel: Yes
+. 2017-01-01 21:29:08.638 Return code variable: Autodetect; Lookup user groups: Auto
+. 2017-01-01 21:29:08.638 Shell: default
+. 2017-01-01 21:29:08.638 EOL: LF, UTF: Auto
+. 2017-01-01 21:29:08.638 Clear aliases: Yes, Unset nat.vars: Yes, Resolve symlinks: Yes; Follow directory symlinks: No
+. 2017-01-01 21:29:08.638 LS: ls -la, Ign LS warn: Yes, Scp1 Comp: No
+. 2017-01-01 21:29:08.638 SFTP Bugs: Auto,Auto
+. 2017-01-01 21:29:08.638 SFTP Server: default
+. 2017-01-01 21:29:08.638 Local directory: default, Remote directory: home, Update: Yes, Cache: Yes
+. 2017-01-01 21:29:08.638 Cache directory changes: Yes, Permanent: Yes
+. 2017-01-01 21:29:08.638 Recycle bin: Delete to: No, Overwritten to: No, Bin path: 
+. 2017-01-01 21:29:08.638 DST mode: Unix
+. 2017-01-01 21:29:08.638 --------------------------------------------------------------------------
+. 2017-01-01 21:29:08.638 Looking up host "test.rebex.net" for SSH connection
+. 2017-01-01 21:29:08.669 Connecting to 195.144.107.198 port 22
+. 2017-01-01 21:29:08.888 We claim version: SSH-2.0-WinSCP_release_5.9.3
+. 2017-01-01 21:29:09.169 Server version: SSH-2.0-RebexSSH_1.0.6194.0
+. 2017-01-01 21:29:09.169 We believe remote version has SSH-2 channel request bug
+. 2017-01-01 21:29:09.169 Using SSH protocol version 2
+. 2017-01-01 21:29:09.169 Have a known host key of type ssh-ed25519
+. 2017-01-01 21:29:09.169 Doing ECDH key exchange with curve Curve25519 and hash SHA-256
+. 2017-01-01 21:29:10.451 Server also has ecdsa-sha2-nistp256/ssh-rsa host keys, but we don't know any of them
+. 2017-01-01 21:29:10.451 Host key fingerprint is:
+. 2017-01-01 21:29:10.451 ssh-ed25519 256 e7:e4:45:c6:b8:e4:bb:d8:68:89:27:86:fd:01:58:f0
+. 2017-01-01 21:29:10.451 Verifying host key ssh-ed25519 0x4ee8a1fd4fd98ffc 3b24c87e10b5895c 68f654f2ae25a60d e21928dc450934,0x4489710d8c91f14a 0f4d912da249df0a 54f062fce5a71b10 2ffcc7895fcc57e7  with fingerprint ssh-ed25519 256 e7:e4:45:c6:b8:e4:bb:d8:68:89:27:86:fd:01:58:f0
+. 2017-01-01 21:29:10.451 Host key matches cached key
+. 2017-01-01 21:29:10.451 Initialised AES-256 SDCTR client->server encryption
+. 2017-01-01 21:29:10.451 Initialised HMAC-SHA-256 client->server MAC algorithm
+. 2017-01-01 21:29:10.763 Initialised AES-256 SDCTR server->client encryption
+. 2017-01-01 21:29:10.763 Initialised HMAC-SHA-256 server->client MAC algorithm
+! 2017-01-01 21:29:10.997 Using username "demo".
+. 2017-01-01 21:29:11.232 Server offered these authentication methods: password,keyboard-interactive
+. 2017-01-01 21:29:11.232 Attempting keyboard-interactive authentication
+. 2017-01-01 21:29:11.451 Prompt (keyboard interactive, "SSH server authentication", "Using keyboard-interactive authentication.", "Password: ")
+. 2017-01-01 21:29:11.451 Using stored password.
+. 2017-01-01 21:29:11.685 Access granted
+. 2017-01-01 21:29:11.685 Opening session as main channel
+. 2017-01-01 21:29:11.919 Opened main channel
+. 2017-01-01 21:29:12.560 Started a shell/command
+. 2017-01-01 21:29:12.560 --------------------------------------------------------------------------
+. 2017-01-01 21:29:12.560 Using SFTP protocol.
+. 2017-01-01 21:29:12.560 Doing startup conversation with host.
+> 2017-01-01 21:29:12.560 Type: SSH_FXP_INIT, Size: 5, Number: -1
+< 2017-01-01 21:29:12.779 Type: SSH_FXP_VERSION, Size: 22, Number: -1
+. 2017-01-01 21:29:12.779 SFTP version 4 negotiated.
+. 2017-01-01 21:29:12.779 Server requests EOL sequence "\r\n".
+. 2017-01-01 21:29:12.779 We will use UTF-8 strings as it is mandatory with SFTP version 4 and newer
+. 2017-01-01 21:29:12.779 Getting current directory name.
+. 2017-01-01 21:29:12.779 Getting real path for '.'
+> 2017-01-01 21:29:12.779 Type: SSH_FXP_REALPATH, Size: 10, Number: 16
+< 2017-01-01 21:29:13.013 Type: SSH_FXP_NAME, Size: 19, Number: 16
+. 2017-01-01 21:29:13.013 Real path is '/'
+. 2017-01-01 21:29:13.013 Startup conversation with host finished.
+< 2017-01-01 21:29:13.013 Script: Active session: [1] demo@test.rebex.net
+> 2017-01-01 21:29:13.013 Script: cd pub/example
+. 2017-01-01 21:29:13.013 Cached directory change via "pub/example" to "/pub/example".
+. 2017-01-01 21:29:13.013 Getting current directory name.
+< 2017-01-01 21:29:13.013 Script: /pub/example
+> 2017-01-01 21:29:13.013 Script: get ConsoleClient.png
+. 2017-01-01 21:29:13.013 Listing file "ConsoleClient.png".
+> 2017-01-01 21:29:13.013 Type: SSH_FXP_LSTAT, Size: 43, Number: 263
+< 2017-01-01 21:29:13.232 Type: SSH_FXP_ATTRS, Size: 46, Number: 263
+. 2017-01-01 21:29:13.232 ConsoleClient.png;-;14280;2007-03-19T19:52:59.000Z;3;"" [0];"" [0];rw-------;0
+. 2017-01-01 21:29:13.232 Copying 1 files/directories to local directory "C:\Program Files\Git\git\reconciliation_helper"
+. 2017-01-01 21:29:13.232   PrTime: Yes; PrRO: No; Rght: rw-r--r--; PrR: No (No); FnCs: N; RIC: 0100; Resume: S (102400); CalcS: No; Mask: 
+. 2017-01-01 21:29:13.232   TM: B; ClAr: No; RemEOF: No; RemBOM: No; CPS: 0; NewerOnly: No; InclM: ; ResumeL: 0
+. 2017-01-01 21:29:13.232   AscM: *.*html; *.htm; *.txt; *.php; *.php3; *.cgi; *.c; *.cpp; *.h; *.pas; *.bas; *.tex; *.pl; *.js; .htaccess; *.xtml; *.css; *.cfg; *.ini; *.sh; *.xml
+. 2017-01-01 21:29:13.232 File: '/pub/example/ConsoleClient.png' [2007-03-19T19:52:59.000Z] [14280]
+. 2017-01-01 21:29:13.232 Copying "/pub/example/ConsoleClient.png" to local directory started.
+. 2017-01-01 21:29:13.232 Binary transfer mode selected.
+. 2017-01-01 21:29:13.232 Opening remote file.
+> 2017-01-01 21:29:13.232 Type: SSH_FXP_OPEN, Size: 48, Number: 515
+< 2017-01-01 21:29:13.482 Type: SSH_FXP_HANDLE, Size: 13, Number: 515
+> 2017-01-01 21:29:13.482 Type: SSH_FXP_FSTAT, Size: 17, Number: 776
+< 2017-01-01 21:29:13.701 Type: SSH_FXP_ATTRS, Size: 46, Number: 776
+. 2017-01-01 21:29:13.716 Confirming overwriting of file.
+> 2017-01-01 21:29:13.716 Type: SSH_FXP_READ, Size: 25, Number: 1029
+< 2017-01-01 21:29:14.951 Status code: 1
+. 2017-01-01 21:29:14.951 3 skipped SSH_FXP_WRITE, SSH_FXP_READ, SSH_FXP_DATA and SSH_FXP_STATUS packets.
+> 2017-01-01 21:29:14.951 Type: SSH_FXP_CLOSE, Size: 13, Number: 1540
+. 2017-01-01 21:29:14.951 Preserving timestamp [2007-03-19T19:52:59.000Z]
+. 2017-01-01 21:29:14.966 Transfer done: '/pub/example/ConsoleClient.png' [14280]
+> 2017-01-01 21:29:14.966 Script: get FtpDownloader.png
+. 2017-01-01 21:29:14.966 Listing file "FtpDownloader.png".
+> 2017-01-01 21:29:14.966 Type: SSH_FXP_LSTAT, Size: 43, Number: 1799
+< 2017-01-01 21:29:15.185 Type: SSH_FXP_STATUS, Size: 19, Number: 1540
+. 2017-01-01 21:29:15.185 Discarding reserved response
+< 2017-01-01 21:29:15.420 Type: SSH_FXP_ATTRS, Size: 46, Number: 1799
+. 2017-01-01 21:29:15.420 FtpDownloader.png;-;15836;2007-03-19T19:53:00.000Z;3;"" [0];"" [0];rw-------;0
+. 2017-01-01 21:29:15.420 Copying 1 files/directories to local directory "C:\Program Files\Git\git\reconciliation_helper"
+. 2017-01-01 21:29:15.420   PrTime: Yes; PrRO: No; Rght: rw-r--r--; PrR: No (No); FnCs: N; RIC: 0100; Resume: S (102400); CalcS: No; Mask: 
+. 2017-01-01 21:29:15.420   TM: B; ClAr: No; RemEOF: No; RemBOM: No; CPS: 0; NewerOnly: No; InclM: ; ResumeL: 0
+. 2017-01-01 21:29:15.420   AscM: *.*html; *.htm; *.txt; *.php; *.php3; *.cgi; *.c; *.cpp; *.h; *.pas; *.bas; *.tex; *.pl; *.js; .htaccess; *.xtml; *.css; *.cfg; *.ini; *.sh; *.xml
+. 2017-01-01 21:29:15.420 File: '/pub/example/FtpDownloader.png' [2007-03-19T19:53:00.000Z] [15836]
+. 2017-01-01 21:29:15.420 Copying "/pub/example/FtpDownloader.png" to local directory started.
+. 2017-01-01 21:29:15.420 Binary transfer mode selected.
+. 2017-01-01 21:29:15.420 Opening remote file.
+> 2017-01-01 21:29:15.420 Type: SSH_FXP_OPEN, Size: 48, Number: 2051
+< 2017-01-01 21:29:15.638 Type: SSH_FXP_HANDLE, Size: 13, Number: 2051
+> 2017-01-01 21:29:15.638 Type: SSH_FXP_FSTAT, Size: 17, Number: 2312
+< 2017-01-01 21:29:15.873 Type: SSH_FXP_ATTRS, Size: 46, Number: 2312
+. 2017-01-01 21:29:15.873 Confirming overwriting of file.
+> 2017-01-01 21:29:15.873 Type: SSH_FXP_READ, Size: 25, Number: 2565
+< 2017-01-01 21:29:16.638 Status code: 1
+. 2017-01-01 21:29:16.638 3 skipped SSH_FXP_WRITE, SSH_FXP_READ, SSH_FXP_DATA and SSH_FXP_STATUS packets.
+> 2017-01-01 21:29:16.638 Type: SSH_FXP_CLOSE, Size: 13, Number: 3076
+. 2017-01-01 21:29:16.638 Preserving timestamp [2007-03-19T19:53:00.000Z]
+. 2017-01-01 21:29:16.638 Transfer done: '/pub/example/FtpDownloader.png' [15836]
+> 2017-01-01 21:29:16.638 Script: get mail-editor.png
+. 2017-01-01 21:29:16.638 Listing file "mail-editor.png".
+> 2017-01-01 21:29:16.638 Type: SSH_FXP_LSTAT, Size: 41, Number: 3335
+< 2017-01-01 21:29:16.888 Type: SSH_FXP_STATUS, Size: 19, Number: 3076
+. 2017-01-01 21:29:16.888 Discarding reserved response
+< 2017-01-01 21:29:17.123 Type: SSH_FXP_ATTRS, Size: 46, Number: 3335
+. 2017-01-01 21:29:17.123 mail-editor.png;-;16471;2007-02-16T17:00:27.000Z;3;"" [0];"" [0];rw-------;0
+. 2017-01-01 21:29:17.123 Copying 1 files/directories to local directory "C:\Program Files\Git\git\reconciliation_helper"
+. 2017-01-01 21:29:17.123   PrTime: Yes; PrRO: No; Rght: rw-r--r--; PrR: No (No); FnCs: N; RIC: 0100; Resume: S (102400); CalcS: No; Mask: 
+. 2017-01-01 21:29:17.123   TM: B; ClAr: No; RemEOF: No; RemBOM: No; CPS: 0; NewerOnly: No; InclM: ; ResumeL: 0
+. 2017-01-01 21:29:17.123   AscM: *.*html; *.htm; *.txt; *.php; *.php3; *.cgi; *.c; *.cpp; *.h; *.pas; *.bas; *.tex; *.pl; *.js; .htaccess; *.xtml; *.css; *.cfg; *.ini; *.sh; *.xml
+. 2017-01-01 21:29:17.123 File: '/pub/example/mail-editor.png' [2007-02-16T17:00:27.000Z] [16471]
+. 2017-01-01 21:29:17.123 Copying "/pub/example/mail-editor.png" to local directory started.
+. 2017-01-01 21:29:17.123 Binary transfer mode selected.
+. 2017-01-01 21:29:17.123 Opening remote file.
+> 2017-01-01 21:29:17.123 Type: SSH_FXP_OPEN, Size: 46, Number: 3587
+< 2017-01-01 21:29:17.342 Type: SSH_FXP_HANDLE, Size: 13, Number: 3587
+> 2017-01-01 21:29:17.342 Type: SSH_FXP_FSTAT, Size: 17, Number: 3848
+< 2017-01-01 21:29:17.576 Type: SSH_FXP_ATTRS, Size: 46, Number: 3848
+. 2017-01-01 21:29:17.576 Confirming overwriting of file.
+> 2017-01-01 21:29:17.592 Type: SSH_FXP_READ, Size: 25, Number: 4101
+< 2017-01-01 21:29:18.295 Status code: 1
+. 2017-01-01 21:29:18.295 3 skipped SSH_FXP_WRITE, SSH_FXP_READ, SSH_FXP_DATA and SSH_FXP_STATUS packets.
+> 2017-01-01 21:29:18.295 Type: SSH_FXP_CLOSE, Size: 13, Number: 4612
+. 2017-01-01 21:29:18.295 Preserving timestamp [2007-02-16T17:00:27.000Z]
+. 2017-01-01 21:29:18.295 Transfer done: '/pub/example/mail-editor.png' [16471]
+> 2017-01-01 21:29:18.295 Script: exit
+. 2017-01-01 21:29:18.295 Script: Exit code: 0
+. 2017-01-01 21:29:18.295 Closing connection.
+. 2017-01-01 21:29:18.295 Sending special code: 12
+. 2017-01-01 21:29:18.295 Sent EOF message

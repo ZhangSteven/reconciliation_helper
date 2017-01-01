@@ -9,7 +9,9 @@ from os.path import join
 from subprocess import run, TimeoutExpired, CalledProcessError
 from reconciliation_helper.utility import logger, get_winscp_script_directory, \
 											get_winscp_log_directory, \
-											get_winscp_path, get_timeout
+											get_winscp_path, get_timeout, \
+											get_sftp_server, get_sftp_user, \
+											get_sftp_password
 
 
 
@@ -65,10 +67,16 @@ def create_winscp_script(file_list, suffix, directory=None):
 
 	script_file = join(directory, 'run-sftp_{0}.txt'.format(suffix))
 	with open(script_file, 'w') as f:
-		f.write(r'open sftp://demo:password@test.rebex.net/'+'\n')
-		f.write(r'cd pub/example'+'\n')
+		f.write('open sftp://{0}:{1}@{2}\n'.format(get_sftp_user(), \
+				get_sftp_password(), get_sftp_server()))
+
+		f.write('cd pub/example\n')
 		for file in file_list:
 			f.write('get {0}\n'.format(file))
+
+		# f.write('cd Reconciliation\n')
+		# for file in file_list:
+		# 	f.write('put {0}\n'.format(file))
 
 		f.write('exit')
 
@@ -116,12 +124,11 @@ def read_log(winscp_log):
 	with open(winscp_log) as f:
 		for line in f:
 			tokens = line.split()
-			# print(tokens)
 			if len(tokens) < 6:
 				continue
 
 			if tokens[3] == 'Transfer' and tokens[4] == 'done:':
-				successful_list.append([tokens[5][1:-1]])
+				successful_list.append(tokens[5][1:-1])
 
 	return successful_list
 
@@ -129,6 +136,12 @@ def read_log(winscp_log):
 
 def get_fail_list(file_list, pass_list):
 	fail_list = []
+	d = {key:0 for key in file_list}
+	for file in pass_list:
+		try:
+			d[file] = d[file] + 1
+		except KeyError:
+			logger.error('')
 
 	return fail_list
 

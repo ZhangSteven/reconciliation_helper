@@ -1,0 +1,90 @@
+. 2017-01-01 21:30:41.150 --------------------------------------------------------------------------
+. 2017-01-01 21:30:41.150 WinSCP Version 5.9.3 (Build 7136) (OS 10.0.14393 - Windows 10 Pro)
+. 2017-01-01 21:30:41.150 Configuration: HKCU\Software\Martin Prikryl\WinSCP 2\
+. 2017-01-01 21:30:41.150 Log level: Normal
+. 2017-01-01 21:30:41.150 Local account: xuanyi_thinkpad\shutao
+. 2017-01-01 21:30:41.150 Working directory: C:\Program Files\Git\git\reconciliation_helper
+. 2017-01-01 21:30:41.150 Process ID: 10164
+. 2017-01-01 21:30:41.150 Command-line: "C:\Program Files (x86)\WinSCP\WinSCP.exe" /console=593 /consoleinstance=_9048_131 "/script=C:\Program Files\Git\git\reconciliation_helper\winscp_script\run-sftp_2017-01-01T213040.txt" "/log=C:\Program Files\Git\git\reconciliation_helper\winscp_log\log_2017-01-01T213040.txt" 
+. 2017-01-01 21:30:41.150 Time zone: Current: GMT+8 (China Standard Time), No DST
+. 2017-01-01 21:30:41.150 Login time: Sunday, January 1, 2017 9:30:41 PM
+. 2017-01-01 21:30:41.150 --------------------------------------------------------------------------
+. 2017-01-01 21:30:41.150 Script: Retrospectively logging previous script records:
+> 2017-01-01 21:30:41.150 Script: open sftp://demo:***@test.rebex.net
+. 2017-01-01 21:30:41.150 --------------------------------------------------------------------------
+. 2017-01-01 21:30:41.150 Session name: demo@test.rebex.net (Ad-Hoc site)
+. 2017-01-01 21:30:41.150 Host name: test.rebex.net (Port: 22)
+. 2017-01-01 21:30:41.150 User name: demo (Password: Yes, Key file: No, Passphrase: No)
+. 2017-01-01 21:30:41.150 Tunnel: No
+. 2017-01-01 21:30:41.150 Transfer Protocol: SFTP
+. 2017-01-01 21:30:41.150 Ping type: Off, Ping interval: 30 sec; Timeout: 15 sec
+. 2017-01-01 21:30:41.150 Disable Nagle: No
+. 2017-01-01 21:30:41.150 Proxy: None
+. 2017-01-01 21:30:41.150 Send buffer: 262144
+. 2017-01-01 21:30:41.150 SSH protocol version: 2; Compression: No
+. 2017-01-01 21:30:41.150 Bypass authentication: No
+. 2017-01-01 21:30:41.150 Try agent: Yes; Agent forwarding: No; TIS/CryptoCard: No; KI: Yes; GSSAPI: No
+. 2017-01-01 21:30:41.150 Ciphers: aes,chacha20,blowfish,3des,WARN,arcfour,des; Ssh2DES: No
+. 2017-01-01 21:30:41.150 KEX: ecdh,dh-gex-sha1,dh-group14-sha1,rsa,WARN,dh-group1-sha1
+. 2017-01-01 21:30:41.150 SSH Bugs: Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto
+. 2017-01-01 21:30:41.150 Simple channel: Yes
+. 2017-01-01 21:30:41.150 Return code variable: Autodetect; Lookup user groups: Auto
+. 2017-01-01 21:30:41.150 Shell: default
+. 2017-01-01 21:30:41.166 EOL: LF, UTF: Auto
+. 2017-01-01 21:30:41.166 Clear aliases: Yes, Unset nat.vars: Yes, Resolve symlinks: Yes; Follow directory symlinks: No
+. 2017-01-01 21:30:41.166 LS: ls -la, Ign LS warn: Yes, Scp1 Comp: No
+. 2017-01-01 21:30:41.166 SFTP Bugs: Auto,Auto
+. 2017-01-01 21:30:41.166 SFTP Server: default
+. 2017-01-01 21:30:41.166 Local directory: default, Remote directory: home, Update: Yes, Cache: Yes
+. 2017-01-01 21:30:41.166 Cache directory changes: Yes, Permanent: Yes
+. 2017-01-01 21:30:41.166 Recycle bin: Delete to: No, Overwritten to: No, Bin path: 
+. 2017-01-01 21:30:41.166 DST mode: Unix
+. 2017-01-01 21:30:41.166 --------------------------------------------------------------------------
+. 2017-01-01 21:30:41.166 Looking up host "test.rebex.net" for SSH connection
+. 2017-01-01 21:30:41.166 Connecting to 195.144.107.198 port 22
+. 2017-01-01 21:30:44.400 We claim version: SSH-2.0-WinSCP_release_5.9.3
+. 2017-01-01 21:30:44.635 Server version: SSH-2.0-RebexSSH_1.0.6194.0
+. 2017-01-01 21:30:44.635 We believe remote version has SSH-2 channel request bug
+. 2017-01-01 21:30:44.635 Using SSH protocol version 2
+. 2017-01-01 21:30:44.635 Have a known host key of type ssh-ed25519
+. 2017-01-01 21:30:44.635 Doing ECDH key exchange with curve Curve25519 and hash SHA-256
+. 2017-01-01 21:30:45.682 Server also has ecdsa-sha2-nistp256/ssh-rsa host keys, but we don't know any of them
+. 2017-01-01 21:30:45.682 Host key fingerprint is:
+. 2017-01-01 21:30:45.682 ssh-ed25519 256 e7:e4:45:c6:b8:e4:bb:d8:68:89:27:86:fd:01:58:f0
+. 2017-01-01 21:30:45.682 Verifying host key ssh-ed25519 0x4ee8a1fd4fd98ffc 3b24c87e10b5895c 68f654f2ae25a60d e21928dc450934,0x4489710d8c91f14a 0f4d912da249df0a 54f062fce5a71b10 2ffcc7895fcc57e7  with fingerprint ssh-ed25519 256 e7:e4:45:c6:b8:e4:bb:d8:68:89:27:86:fd:01:58:f0
+. 2017-01-01 21:30:45.682 Host key matches cached key
+. 2017-01-01 21:30:45.682 Initialised AES-256 SDCTR client->server encryption
+. 2017-01-01 21:30:45.682 Initialised HMAC-SHA-256 client->server MAC algorithm
+. 2017-01-01 21:30:45.682 Initialised AES-256 SDCTR server->client encryption
+. 2017-01-01 21:30:45.682 Initialised HMAC-SHA-256 server->client MAC algorithm
+! 2017-01-01 21:30:46.135 Using username "demo".
+. 2017-01-01 21:30:46.354 Server offered these authentication methods: password,keyboard-interactive
+. 2017-01-01 21:30:46.369 Attempting keyboard-interactive authentication
+. 2017-01-01 21:30:46.604 Prompt (keyboard interactive, "SSH server authentication", "Using keyboard-interactive authentication.", "Password: ")
+. 2017-01-01 21:30:46.604 Using stored password.
+. 2017-01-01 21:30:46.822 Access granted
+. 2017-01-01 21:30:46.822 Opening session as main channel
+. 2017-01-01 21:30:47.057 Opened main channel
+. 2017-01-01 21:30:47.479 Started a shell/command
+. 2017-01-01 21:30:47.479 --------------------------------------------------------------------------
+. 2017-01-01 21:30:47.479 Using SFTP protocol.
+. 2017-01-01 21:30:47.479 Doing startup conversation with host.
+> 2017-01-01 21:30:47.479 Type: SSH_FXP_INIT, Size: 5, Number: -1
+< 2017-01-01 21:30:47.713 Type: SSH_FXP_VERSION, Size: 22, Number: -1
+. 2017-01-01 21:30:47.713 SFTP version 4 negotiated.
+. 2017-01-01 21:30:47.713 Server requests EOL sequence "\r\n".
+. 2017-01-01 21:30:47.713 We will use UTF-8 strings as it is mandatory with SFTP version 4 and newer
+. 2017-01-01 21:30:47.713 Getting current directory name.
+. 2017-01-01 21:30:47.713 Getting real path for '.'
+> 2017-01-01 21:30:47.713 Type: SSH_FXP_REALPATH, Size: 10, Number: 16
+< 2017-01-01 21:30:47.932 Type: SSH_FXP_NAME, Size: 19, Number: 16
+. 2017-01-01 21:30:47.932 Real path is '/'
+. 2017-01-01 21:30:47.932 Startup conversation with host finished.
+< 2017-01-01 21:30:47.932 Script: Active session: [1] demo@test.rebex.net
+> 2017-01-01 21:30:47.932 Script: cd pub/example
+. 2017-01-01 21:30:47.932 Cached directory change via "pub/example" to "/pub/example".
+. 2017-01-01 21:30:47.932 Getting current directory name.
+< 2017-01-01 21:30:47.932 Script: /pub/example
+> 2017-01-01 21:30:47.932 Script: get ConsoleClient.png
+. 2017-01-01 21:30:47.932 Listing file "ConsoleClient.png".
+> 2017-01-01 21:30:47.932 Type: SSH_FXP_LSTAT, Size: 43, Number: 263

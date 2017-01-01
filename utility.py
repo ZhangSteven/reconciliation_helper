@@ -148,4 +148,22 @@ def get_winscp_log_directory():
 
 def get_timeout():
 	global config
-	return float(config['winscp']['timeout'])
+	return float(config['sftp']['timeout'])
+
+
+
+def get_sftp_server():
+	global config
+	return config['sftp']['server']
+
+
+
+def get_sftp_user():
+	global config
+	return config['sftp']['username']
+
+
+
+def get_sftp_password():
+	global config
+	return config['sftp']['password']

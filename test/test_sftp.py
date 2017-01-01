@@ -7,7 +7,8 @@ from os.path import isfile, join
 from glob import glob
 import os
 from reconciliation_helper.utility import get_current_path
-from reconciliation_helper.sftp import create_winscp_script, create_winscp_log
+from reconciliation_helper.sftp import create_winscp_script, create_winscp_log, \
+                                        read_log
 
 
 class TestSftp(unittest2.TestCase):
@@ -46,6 +47,23 @@ class TestSftp(unittest2.TestCase):
         log_file = create_winscp_log(suffix, get_test_winscp_log_dir())
         # print(log_file)
         self.assertTrue(isfile(log_file))	# file exists
+
+
+
+    def test_read_log(self):
+        pass_list = read_log(join(get_current_path(), 'samples', 'log_0file.txt'))
+        self.assertEqual(len(pass_list), 0)
+
+        pass_list = read_log(join(get_current_path(), 'samples', 'log_1file_then_timeout.txt'))
+        self.assertEqual(len(pass_list), 1)
+        # print(pass_list)
+        self.assertEqual(pass_list[0], '/pub/example/ConsoleClient.png')
+
+        pass_list = read_log(join(get_current_path(), 'samples', 'log_3files.txt'))
+        self.assertEqual(len(pass_list), 3)
+        self.assertEqual(pass_list[0], '/pub/example/ConsoleClient.png')
+        self.assertEqual(pass_list[1], '/pub/example/FtpDownloader.png')
+        self.assertEqual(pass_list[2], '/pub/example/mail-editor.png')
 
 
 
