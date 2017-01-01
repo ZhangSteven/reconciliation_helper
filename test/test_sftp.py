@@ -3,9 +3,9 @@ Test the open_jpm.py
 """
 
 import unittest2
-from datetime import datetime
-from os.path import isfile, isdir, join
-import shutil, os
+from os.path import isfile, join
+from glob import glob
+import os
 from reconciliation_helper.utility import get_current_path
 from reconciliation_helper.sftp import create_winscp_script, create_winscp_log
 
@@ -14,7 +14,6 @@ class TestSftp(unittest2.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestSftp, self).__init__(*args, **kwargs)
-
 
     def setUp(self):
         """
@@ -27,24 +26,45 @@ class TestSftp(unittest2.TestCase):
         """
             Run after a test finishes
         """
-        # shutil.rmtree(get_base_dir())
-
-
-
-    def setup_dir(self):
         pass
 
 
 
     def test_create_winscp_script(self):
-        directory = join(get_current_path(), 'samples', 'winscp_script')
+        delete_test_script_files()
         file_list = [r'C:\temp\file1', r'C:\temp\file2']
         suffix = '2012T0100'
-        create_winscp_script(file_list, suffix, directory)
+        script_file = create_winscp_script(file_list, suffix, \
+						get_test_winscp_script_dir())
+        self.assertTrue(isfile(script_file))	# file exists
 
 
 
     def test_create_winscp_log(self):
-        directory = join(get_current_path(), 'samples', 'winscp_log')
+        delete_test_log_files()
         suffix = '2012T0100'
-        create_winscp_log(suffix, directory)
+        log_file = create_winscp_log(suffix, get_test_winscp_log_dir())
+        # print(log_file)
+        self.assertTrue(isfile(log_file))	# file exists
+
+
+
+def get_test_winscp_script_dir():
+	return join(get_current_path(), 'samples', 'winscp_script')
+
+
+
+def get_test_winscp_log_dir():
+    return join(get_current_path(), 'samples', 'winscp_log')
+
+
+
+def delete_test_log_files():
+	for file in glob(join(get_test_winscp_log_dir(), '*.txt')):
+		os.remove(file)
+
+
+
+def delete_test_script_files():
+	for file in glob(join(get_test_winscp_script_dir(), '*.txt')):
+		os.remove(file)

@@ -7,15 +7,18 @@
 import time, os
 from os.path import join
 from subprocess import run, TimeoutExpired, CalledProcessError
+from reconciliation_helper.utility import logger, get_winscp_script_directory, \
+											get_winscp_log_directory, \
+											get_winscp_path, get_timeout
 
 
 
 def upload(file_list):
 	"""
-
+	Call winscp.com to execute the sftp upload job.
 	"""
+	winscp_script, winscp_log = create_winscp_files(file_list)
 	try:
-		winscp_script, winscp_log = create_winscp_files(file_list)
 		args = [get_winscp_path(), '/script={0}'.format(winscp_script), \
 				'/log={0}'.format(winscp_log)]
 
@@ -128,3 +131,9 @@ def get_fail_list(file_list, pass_list):
 	fail_list = []
 
 	return fail_list
+
+
+
+if __name__ == '__main__':
+	file_list = ['ConsoleClient.png', 'FtpDownloader.png', 'mail-editor.png']
+	upload(file_list)

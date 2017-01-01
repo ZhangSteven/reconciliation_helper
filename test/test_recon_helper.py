@@ -58,7 +58,7 @@ class TestRecon(unittest2.TestCase):
                                     join(get_current_path(), 'samples', 'base_dir1', 'CLO Equity', 'JP Morgan Broker Statement 2016-07-06.xls')]}
         output_dir = join(get_current_path(), 'samples', 'base_dir1', 'result')
         result = convert(files, output_dir)
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 3)
         self.assertEqual(len(result['fail']), 0)
         self.assertEqual(len(result['pass']), 3)
         self.assertEqual(result['pass'][0], files['ListCo Equity'][0])
@@ -77,7 +77,7 @@ class TestRecon(unittest2.TestCase):
         
         output_dir = join(get_current_path(), 'samples', 'base_dir1', 'result')
         result = convert(files, output_dir)
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 3)
         self.assertEqual(len(result['pass']), 3)
         self.assertEqual(len(result['fail']), 1)
         self.assertEqual(result['pass'][0], files['Concord'][0])
@@ -94,7 +94,7 @@ class TestRecon(unittest2.TestCase):
                         join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-15.xls')]}
         output_dir = join(get_current_path(), 'samples', 'base_dir2', 'result')
         result = convert(files, output_dir)
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 3)
         self.assertEqual(len(result['fail']), 0)
         self.assertEqual(len(result['pass']), 2)
         self.assertEqual(result['pass'][0], files['DIF'][0])

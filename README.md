@@ -14,6 +14,14 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 
 
+++++++++++++++
+Known Issues
+++++++++++++++
+1. When use git clone or pull or merge in a new location, the last modified time of the newly added files will be the sync time, instead of the file's original last modified time. This can cause some tests to fail.
+
+
+
+
 ++++++++++
 Todo
 ++++++++++

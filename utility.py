@@ -148,4 +148,4 @@ def get_winscp_log_directory():
 
 def get_timeout():
 	global config
-	return config['winscp']['timeout']
+	return float(config['winscp']['timeout'])
