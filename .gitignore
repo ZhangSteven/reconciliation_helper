@@ -10,3 +10,11 @@ records.db
 # ignore the result files
 samples/base_dir1/result/*
 samples/base_dir2/result/*
+
+# the testing winscp scripts and logs
+samples/winscp_script/
+samples/winscp_log/
+
+# the winscp scripts and logs
+winscp_script/
+winscp_log/
