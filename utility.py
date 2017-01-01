@@ -125,3 +125,27 @@ def get_output_directory():
 		directory = get_current_path()
 
 	return directory
+
+
+
+def get_winscp_path():
+	global config
+	return config['winscp']['application']
+
+
+
+def get_winscp_script_directory():
+	global config
+	return config['winscp']['script_dir']
+
+
+
+def get_winscp_log_directory():
+	global config
+	return config['winscp']['log_dir']
+
+
+
+def get_timeout():
+	global config
+	return config['winscp']['timeout']
