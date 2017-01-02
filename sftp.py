@@ -15,6 +15,11 @@ from reconciliation_helper.utility import logger, get_winscp_script_directory, \
 
 
 
+class InvalidPassList(Exception):
+	pass
+
+
+
 def upload(file_list):
 	"""
 	Call winscp.com to execute the sftp upload job.
@@ -70,7 +75,6 @@ def create_winscp_script(file_list, suffix, directory=None):
 		f.write('open sftp://{0}:{1}@{2}\n'.format(get_sftp_user(), \
 				get_sftp_password(), get_sftp_server()))
 
-		f.write('cd pub/example\n')
 		for file in file_list:
 			f.write('get {0}\n'.format(file))
 
@@ -141,12 +145,24 @@ def get_fail_list(file_list, pass_list):
 		try:
 			d[file] = d[file] + 1
 		except KeyError:
-			logger.error('')
+			logger.error('get_fail_list(): {0} not in file list, but in pass list'.
+							format(file))
+			raise InvalidPassList()
+
+	for file, value in d.items():
+		if value == 0:
+			fail_list.append(file)
 
 	return fail_list
 
 
 
 if __name__ == '__main__':
-	file_list = ['ConsoleClient.png', 'FtpDownloader.png', 'mail-editor.png']
-	upload(file_list)
+	"""
+	For testing only.
+	"""
+	file_list = ['/pub/example/ConsoleClient.png', \
+					'/pub/example/FtpDownloader.png', \
+					'/pub/example/mail-editor.png']
+	result = upload(file_list)
+	print(result)

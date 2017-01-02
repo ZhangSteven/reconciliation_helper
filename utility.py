@@ -128,6 +128,12 @@ def get_output_directory():
 
 
 
+def get_backup_directory():
+	global config
+	return config['directory']['backup']
+
+	
+
 def get_winscp_path():
 	global config
 	return config['winscp']['application']

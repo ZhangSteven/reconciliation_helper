@@ -8,7 +8,9 @@ from glob import glob
 import os
 from reconciliation_helper.utility import get_current_path
 from reconciliation_helper.sftp import create_winscp_script, create_winscp_log, \
-                                        read_log
+                                        read_log, get_fail_list, InvalidPassList
+from reconciliation_helper.recon_helper import copy_files
+
 
 
 class TestSftp(unittest2.TestCase):
@@ -67,6 +69,40 @@ class TestSftp(unittest2.TestCase):
 
 
 
+    def test_get_fail_list(self):
+        file_list = ['a', 'b', 'c']
+        pass_list = ['b']
+        self.assertTrue(compare_list(get_fail_list(file_list, pass_list), ['a', 'c']))
+
+        file_list = ['a', 'b', 'c']
+        pass_list = ['c', 'a']
+        self.assertEqual(get_fail_list(file_list, pass_list), ['b'])
+
+        file_list = ['a', 'b', 'c']
+        pass_list = ['b', 'a', 'c']
+        self.assertEqual(get_fail_list(file_list, pass_list), [])
+
+        file_list = ['a', 'b', 'c']
+        pass_list = []
+        self.assertTrue(compare_list(get_fail_list(file_list, pass_list), ['a', 'b', 'c']))
+
+        file_list = ['a', 'b', 'c']
+        pass_list = ['b', 'd']
+        with self.assertRaises(InvalidPassList):
+            get_fail_list(file_list, pass_list)
+
+
+
+    def test_copy_files(self):
+        delete_test_temp_files()
+        self.assertEqual(len(glob(join(get_test_temp_dir(), '*.txt'))), 0)
+        file_list = [join(get_current_path(), 'samples', 'log_0file.txt'), \
+                        join(get_current_path(), 'samples', 'log_3files.txt')]
+        copy_files(file_list, get_test_temp_dir())
+        self.assertEqual(len(glob(join(get_test_temp_dir(), '*.txt'))), 2)
+
+
+
 def get_test_winscp_script_dir():
 	return join(get_current_path(), 'samples', 'winscp_script')
 
@@ -74,6 +110,11 @@ def get_test_winscp_script_dir():
 
 def get_test_winscp_log_dir():
     return join(get_current_path(), 'samples', 'winscp_log')
+
+
+
+def get_test_temp_dir():
+    return join(get_current_path(), 'samples', 'temp')
 
 
 
@@ -86,3 +127,24 @@ def delete_test_log_files():
 def delete_test_script_files():
 	for file in glob(join(get_test_winscp_script_dir(), '*.txt')):
 		os.remove(file)
+
+
+
+def delete_test_temp_files():
+    for file in glob(join(get_test_temp_dir(), '*.txt')):
+        os.remove(file)
+
+
+
+def compare_list(list_a, list_b):
+    """
+    Assume list_a contain no duplicate items.
+    """
+    if len(list_a) != len(list_b):
+        return False
+
+    for item in list_a:
+        if not item in list_b:
+            return False
+
+    return True

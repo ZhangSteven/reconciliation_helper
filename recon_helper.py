@@ -7,12 +7,14 @@
 from datetime import datetime
 from os import listdir
 from os.path import isfile, isdir, join
+from shutil import copy2
 from xlrd import open_workbook
 from reconciliation_helper.utility import logger, get_current_path, \
 											get_output_directory, \
 											get_input_directory
 from reconciliation_helper.record import filter_files, save_result, \
 											get_db_connection
+from reconciliation_helper.sftp import upload
 from jpm import open_jpm
 from bochk import open_bochk
 from DIF import open_dif
@@ -186,8 +188,12 @@ def get_filename_prefix(filename, source):
 
 
 
-def upload(result):
-	pass
+def copy_files(file_list, dstn_dir):
+	"""
+	Copy files to a predefined directory.
+	"""
+	for file in file_list:
+		copy2(file, dstn_dir)
 
 
 
@@ -219,5 +225,6 @@ if __name__ == '__main__':
 	save_result(result)
 	get_db_connection().close()
 	upload_result = upload(result)
+	copy_files(upload_result['fail'], get_backup_directory())
 	show_result(result, upload_result)
 	send_notification(result, upload_result)
