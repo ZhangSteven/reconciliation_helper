@@ -173,3 +173,33 @@ def get_sftp_user():
 def get_sftp_password():
 	global config
 	return config['sftp']['password']
+
+
+
+def get_mail_sender():
+	global config
+	return config['email']['sender']
+
+
+
+def get_mail_recipients():
+	global config
+	return config['email']['recipents']
+
+
+
+def get_mail_subject():
+	global config
+	return config['email']['subject']
+
+
+
+def get_mail_server():
+	global config
+	return config['email']['server']
+
+
+
+def get_mail_timeout():
+	global config
+	return float(config['email']['timeout'])

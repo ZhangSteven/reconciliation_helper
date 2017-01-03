@@ -15,6 +15,7 @@ from reconciliation_helper.utility import logger, get_current_path, \
 from reconciliation_helper.record import filter_files, save_result, \
 											get_db_connection
 from reconciliation_helper.sftp import upload
+from reconciliation_helper.mail import send_notification
 from jpm import open_jpm
 from bochk import open_bochk
 from DIF import open_dif
@@ -224,18 +225,22 @@ def show_result(result, upload_result):
 
 
 
-def send_notification(result, upload_result):
-	pass
-
-
 
 if __name__ == '__main__':
-	output_dir = get_output_directory()
-	files = search_files(get_input_directory(), output_dir)
-	result = convert(files, output_dir)
-	save_result(result)
-	get_db_connection().close()
-	upload_result = upload(result['output'])
-	# copy_files(upload_result['fail'], get_backup_directory())
-	show_result(result, upload_result)
-	send_notification(result, upload_result)
+	try:
+		output_dir = get_output_directory()
+		files = search_files(get_input_directory(), output_dir)
+		result = convert(files, output_dir)
+		if result['pass'] == 0 and result['fail'] == 0:
+			logger.info('recon_helper: no files to convert now.')
+		else:
+			save_result(result)
+			get_db_connection().close()
+			upload_result = upload(result['output'])
+			# copy_files(upload_result['fail'], get_backup_directory())
+			show_result(result, upload_result)
+			send_notification(result, upload_result)
+
+	except:
+		logger.error('recon_helper: errors occurred')
+		logger.exception('recon_helper:')
