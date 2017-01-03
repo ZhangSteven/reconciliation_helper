@@ -44,6 +44,12 @@ Todo
 
 
 ++++++++++
+ver 0.23
+++++++++++
+1. mail.py is added to mail conversion and upload results to a list of recipients.
+
+
+++++++++++
 ver 0.22
 ++++++++++
 1. sftp.py is added to upload the csv files to sftp.clamc.com.hk.
