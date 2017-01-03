@@ -198,8 +198,14 @@ def copy_files(file_list, dstn_dir):
 
 
 def show_result(result, upload_result):
+	print('\n+++++++++++++++++++++++++++++++++++')
 	print('Passed: {0}, Failed: {1}'.format(len(result['pass']), len(result['fail'])))
+	if len(upload_result['fail']) == 0:
+		print('All csv files have been uploaded')
+	else:
+		print('{0} csv files are not uploaded'.format(len(upload_result['fail'])))
 	print('')
+
 	for file in result['pass']:
 		print('pass: {0}'.format(file))
 
@@ -209,7 +215,12 @@ def show_result(result, upload_result):
 
 	print('output files: {0}'.format(len(result['output'])))
 	for file in result['output']:
-		print('{0}'.format(file))
+		print(file)
+
+	if len(upload_result['fail']) > 0:
+		print('The following files have not been uploaded yet')
+		for file in upload_result['fail']:
+			print(file)
 
 
 
@@ -224,7 +235,7 @@ if __name__ == '__main__':
 	result = convert(files, output_dir)
 	save_result(result)
 	get_db_connection().close()
-	upload_result = upload(result)
-	copy_files(upload_result['fail'], get_backup_directory())
+	upload_result = upload(result['output'])
+	# copy_files(upload_result['fail'], get_backup_directory())
 	show_result(result, upload_result)
 	send_notification(result, upload_result)
