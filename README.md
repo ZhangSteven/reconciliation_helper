@@ -44,6 +44,13 @@ Todo
 
 
 ++++++++++
+ver 0.22
+++++++++++
+1. sftp.py is added to upload the csv files to sftp.clamc.com.hk.
+
+
+
+++++++++++
 ver 0.21
 ++++++++++
 1. Test mode option is added to config file, with a default value set to empty string (not in test mode). When doing unittest, the testing code will set it to something else, to enable test mode. This way we don't need to pollute the code in record.py with the testmode global variable.
