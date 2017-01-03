@@ -75,12 +75,12 @@ def create_winscp_script(file_list, suffix, directory=None):
 		f.write('open sftp://{0}:{1}@{2}\n'.format(get_sftp_user(), \
 				get_sftp_password(), get_sftp_server()))
 
-		for file in file_list:
-			f.write('get {0}\n'.format(file))
-
-		# f.write('cd Reconciliation\n')
 		# for file in file_list:
-		# 	f.write('put {0}\n'.format(file))
+		# 	f.write('get {0}\n'.format(file))
+
+		f.write('cd reconciliation\n')
+		for file in file_list:
+			f.write('put {0}\n'.format(file))
 
 		f.write('exit')
 
@@ -161,8 +161,9 @@ if __name__ == '__main__':
 	"""
 	For testing only.
 	"""
-	file_list = ['/pub/example/ConsoleClient.png', \
-					'/pub/example/FtpDownloader.png', \
-					'/pub/example/mail-editor.png']
+	# file_list = ['/pub/example/ConsoleClient.png', \
+	# 				'/pub/example/FtpDownloader.png', \
+	# 				'/pub/example/mail-editor.png']
+	file_list = [r'C:\temp2\sample.txt', r'C:\temp2\sample2.txt']
 	result = upload(file_list)
 	print(result)
