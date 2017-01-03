@@ -201,8 +201,10 @@ def copy_files(file_list, dstn_dir):
 def show_result(result, upload_result):
 	print('\n+++++++++++++++++++++++++++++++++++')
 	print('Passed: {0}, Failed: {1}'.format(len(result['pass']), len(result['fail'])))
-	if len(upload_result['fail']) == 0:
-		print('All csv files have been uploaded')
+	if len(upload_result['pass']) > 0 and len(upload_result['fail']) == 0:
+		print('All {0} csv files have been uploaded'.format(len(upload_result['pass'])))
+	elif len(upload_result['pass']) == 0 and len(upload_result['fail']) == 0:
+		print('No csv files to upload')
 	else:
 		print('{0} csv files are not uploaded'.format(len(upload_result['fail'])))
 	print('')
@@ -231,16 +233,20 @@ if __name__ == '__main__':
 		output_dir = get_output_directory()
 		files = search_files(get_input_directory(), output_dir)
 		result = convert(files, output_dir)
-		if result['pass'] == 0 and result['fail'] == 0:
+		upload_result = {'pass':[], 'fail':[]}
+		if len(result['pass']) == 0 and len(result['fail']) == 0:
 			logger.info('recon_helper: no files to convert now.')
 		else:
 			save_result(result)
-			get_db_connection().close()
-			upload_result = upload(result['output'])
-			# copy_files(upload_result['fail'], get_backup_directory())
-			show_result(result, upload_result)
+			
+			if len(result['output']) > 0:
+				upload_result = upload(result['output'])
+				# copy_files(upload_result['fail'], get_backup_directory())
+
 			send_notification(result, upload_result)
 
+		show_result(result, upload_result)			
+		get_db_connection().close()
 	except:
 		logger.error('recon_helper: errors occurred')
 		logger.exception('recon_helper:')
