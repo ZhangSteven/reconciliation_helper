@@ -88,7 +88,7 @@ class TestRecon(unittest2.TestCase):
 
 
 
-    def test_convert_trustee(self):
+    def test_convert_dif(self):
         files = {'DIF': \
                     [join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-12.xls'), \
                         join(get_current_path(), 'samples', 'base_dir2', 'DIF', 'CL Franklin DIF 2016-12-15.xls')]}

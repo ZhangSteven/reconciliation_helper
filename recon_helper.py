@@ -3,7 +3,7 @@
 # Read the holdings section of the excel file from trustee.
 #
 # 
-
+import argparse, sys
 from datetime import datetime
 from os import listdir
 from os.path import isfile, isdir, join
@@ -83,13 +83,14 @@ def convert(files, output_dir):
 	"""
 	logger.debug('convert(): output to: {0}'.format(output_dir))
 	func_map = {
-		'clo equity': convert_jpm,
+		# 'clo equity': convert_jpm,
 		'listco equity': convert_jpm,
 		'concord': convert_bochk,
 		'greenblue': convert_bochk,
-		'clo bond': convert_bochk,
-		'dif': convert_trustee,
-		'special event fund': convert_bochk
+		# 'clo bond': convert_bochk,
+		'dif': convert_dif,
+		'special event fund': convert_bochk,
+		'trustee': convert_trustee
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
@@ -131,23 +132,23 @@ def convert_bochk(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
 
-		filename_no_path = filename.split('\\')[-1]
-		if filename_no_path.startswith('Cash Stt'):
-			read_handler = open_bochk.read_cash_bochk
-			csv_handler = open_bochk.write_cash_csv
-		elif filename_no_path.startswith('Holding'):
-			read_handler = open_bochk.read_holdings_bochk
-			csv_handler = open_bochk.write_holding_csv
-		else:
-			logger.warning('convert_bochk(): cannot tell whether it is a cash or holdings file: {0}'.
-							format(filename))
-			fail_list.append(filename)
-			continue
+		# filename_no_path = filename.split('\\')[-1]
+		# if filename_no_path.startswith('Cash Stt'):
+		# 	read_handler = open_bochk.read_cash_bochk
+		# 	csv_handler = open_bochk.write_cash_csv
+		# elif filename_no_path.startswith('Holding'):
+		# 	read_handler = open_bochk.read_holdings_bochk
+		# 	csv_handler = open_bochk.write_holding_csv
+		# else:
+		# 	logger.warning('convert_bochk(): cannot tell whether it is a cash or holdings file: {0}'.
+		# 					format(filename))
+		# 	fail_list.append(filename)
+		# 	continue
 
 		port_values = {}
 		try:
-			read_handler(filename, port_values)
-			output = csv_handler(port_values, output_dir, get_filename_prefix(filename, 'bochk'))
+			open_bochk.read_file(filename, port_values)
+			output = open_bochk.write_cash_or_holding_csv(port_values, output_dir, get_filename_prefix(filename, 'bochk'))
 			output_list.append(output)
 		except:
 			logger.exception('convert_bochk()')
@@ -159,7 +160,7 @@ def convert_bochk(file_list, output_dir, pass_list, fail_list):
 
 
 
-def convert_trustee(file_list, output_dir, pass_list, fail_list):
+def convert_dif(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
 		port_values = {}
@@ -167,12 +168,17 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 			output = open_dif.open_dif(filename, port_values, output_dir)
 			output_list = output_list + output
 		except:
-			logger.exception('convert_trustee()')
+			logger.exception('convert_dif()')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
 
 	return output_list
+
+
+
+def convert_trustee(file_list, output_dir, pass_list, fail_list):
+	pass
 
 
 
@@ -201,12 +207,12 @@ def copy_files(file_list, dstn_dir):
 def show_result(result, upload_result):
 	print('\n+++++++++++++++++++++++++++++++++++')
 	print('Passed: {0}, Failed: {1}'.format(len(result['pass']), len(result['fail'])))
-	if len(upload_result['pass']) > 0 and len(upload_result['fail']) == 0:
-		print('All {0} csv files have been uploaded'.format(len(upload_result['pass'])))
-	elif len(upload_result['pass']) == 0 and len(upload_result['fail']) == 0:
-		print('No csv files to upload')
-	else:
-		print('{0} csv files are not uploaded'.format(len(upload_result['fail'])))
+	# if len(upload_result['pass']) > 0 and len(upload_result['fail']) == 0:
+	# 	print('All {0} csv files have been uploaded'.format(len(upload_result['pass'])))
+	# elif len(upload_result['pass']) == 0 and len(upload_result['fail']) == 0:
+	# 	print('No csv files to upload')
+	# else:
+	# 	print('{0} csv files are not uploaded'.format(len(upload_result['fail'])))
 	print('')
 
 	for file in result['pass']:
@@ -220,23 +226,40 @@ def show_result(result, upload_result):
 	for file in result['output']:
 		print(file)
 
-	if len(upload_result['fail']) > 0:
-		print('The following files have not been uploaded yet')
-		for file in upload_result['fail']:
-			print(file)
+	# if len(upload_result['fail']) > 0:
+	# 	print('The following files have not been uploaded yet')
+	# 	for file in upload_result['fail']:
+	# 		print(file)
 
 
 
 
 if __name__ == '__main__':
+	"""
+	Use the following to invoke the program if you don't want to save to 
+	database, no upload and no notification email sending:
+
+	python recon_helper.py --mode simple
+
+	Or if you want all of the functions to be there, then:
+
+	python recon_helper.py
+
+	"""
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--mode', nargs='?', metavar='mode', default='normal')
+	args = parser.parse_args()
+
 	try:
 		output_dir = get_output_directory()
 		files = search_files(get_input_directory(), output_dir)
 		result = convert(files, output_dir)
 		upload_result = {'pass':[], 'fail':[]}
 		if len(result['pass']) == 0 and len(result['fail']) == 0:
+			print('no files to convert now.')
 			logger.info('recon_helper: no files to convert now.')
-		else:
+		
+		elif args.mode == 'normal':
 			save_result(result)
 			
 			if len(result['output']) > 0:
@@ -245,8 +268,14 @@ if __name__ == '__main__':
 
 			send_notification(result, upload_result)
 
+		else:
+			print('Working in simple mode, no database saving, no upload, no notification.')
+
 		show_result(result, upload_result)			
 		get_db_connection().close()
 	except:
+		print('Something goes wrong, check log file.')
 		logger.error('recon_helper: errors occurred')
 		logger.exception('recon_helper:')
+	else:
+		print('OK')
