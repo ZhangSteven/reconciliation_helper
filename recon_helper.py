@@ -108,16 +108,28 @@ def convert(files, output_dir):
 
 
 
+def read_jpm_file(filename, port_values, output_dir):
+	"""
+	Read a JPM broker statement file, return the two csv filenames.
+	"""
+	wb = open_workbook(filename=filename)
+	ws = wb.sheet_by_name('Sheet1')
+	open_jpm.read_jpm(ws, port_values)
+	return open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
+
+
+
 def convert_jpm(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
 		port_values = {}
 		try:
-			wb = open_workbook(filename=filename)
-			ws = wb.sheet_by_name('Sheet1')
-			open_jpm.read_jpm(ws, port_values)
-			output = open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
-			output_list = output_list + output
+			# wb = open_workbook(filename=filename)
+			# ws = wb.sheet_by_name('Sheet1')
+			# open_jpm.read_jpm(ws, port_values)
+			# output = open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
+			# output_list = output_list + output
+			output_list = output_list + read_jpm_file(filename, port_values, output_dir)
 		except:
 			logger.exception('convert_jpm()')
 			fail_list.append(filename)
