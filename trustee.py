@@ -7,9 +7,15 @@
 from reconciliation_helper.recon_helper import read_jpm_file
 from reconciliation_helper.utility import logger
 from jpm.open_jpm import get_portfolio_date_as_string
-from bochk.open_bochk import read_file, write_holding_csv, write_cash_csv
+from bochk.open_bochk import read_cash_bochk, read_holdings_bochk, \
+								write_holding_csv, write_cash_csv, \
+								read_cash_fields, read_cash_bochk
 from datetime import datetime
-
+from xlrd import open_workbook
+import shutil
+from os.path import isfile, isdir, join
+from os import listdir, remove
+from shutil import copy2
 
 
 class InconsistentStatementDate(Exception):
@@ -18,14 +24,11 @@ class InconsistentStatementDate(Exception):
 
 
 def convert_trustee(file_list, output_dir, pass_list, fail_list):
-	output_list = []
 	bochk_cash_files = []
-
 	for filename in file_list:
-
 		filename_no_path = filename.split('\\')[-1]
 		if filename_no_path.startswith('BOC Bank Statement') \
-			and is_cash_file(filename):
+			and is_bochk_cash_file(filename):
 			bochk_cash_files.append(filename)
 		
 		elif filename_no_path.startswith('JP Morgan Broker Statement'):
@@ -40,96 +43,163 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 	# end of for loop
 
 	try:
-		jpm_date = handle_jpm(jpm_file, output_dir, output_list)
-		bochk_date = handle_bochk_position(bochk_mc_file, bochk_hk_file, output_dir, output_list)
+		jpm_date, jpm_csv_files = handle_jpm(jpm_file, output_dir)
+		bochk_date, bochk_mc_csv = handle_bochk_position(bochk_mc_file, 'mc', output_dir)
+		bochk_date, bochk_hk_csv = handle_bochk_position(bochk_hk_file, 'hk', output_dir)
 
 		if bochk_date != jpm_date:
 			logger.error('convert_trustee(): bochk date {0} is not the same as jpm date {1}'.
 							format(bochk_date, jpm_date))
 			raise InconsistentStatementDate()
 
-		handle_bochk_cash(bochk_cash_files, bochk_date, output_dir, output_list)
+		bochk_cash_csv = handle_bochk_cash(bochk_cash_files, bochk_date, output_dir)
 
 	except:
 		logger.exception('convert_trustee()')
-		# fail_list.append(filename)
+		fail_list = fail_list + [jpm_file, bochk_mc_file, bochk_hk_file]
+		output_list = []
 	else:
-		pass_list + [jpm_file, bochk_mc_file, bochk_hk_file, ]
+		pass_list = pass_list + [jpm_file, bochk_mc_file, bochk_hk_file]
+		output_list = jpm_csv_files + [bochk_mc_csv, bochk_hk_csv, bochk_cash_csv]
+		move_files(file_list)
+
+	# print(pass_list)
+	# print(fail_list)
+	# print(output_list)
 
 	return output_list
 
 
 
-def handle_jpm(jpm_file, output_dir, output_list):
+def is_bochk_cash_file(filename):
+	"""
+	Tell whether a file is a BOCHK Bank Statement cash position file.
+	"""
+	cash_fields = ['Account Name', 'Account Number', 'Account Type',
+					'Currency', 'Hold Amount']
+	wb = open_workbook(filename=filename)
+	ws = wb.sheet_by_index(0)
+	try:
+		fields = read_cash_fields(ws, 0)
+		if len(fields) == 18:
+			for i in range(5):	# check the first 5 fields
+				if fields[i] != cash_fields[i]:
+					return False
+
+			return True
+
+		else:
+			return False
+	
+	except:
+		logger.info('is_bochk_cash_file(): treat file as non cash file, because error occurs while reading fields from it, {0}'.
+					format(filename))
+		return False
+
+
+
+def handle_jpm(jpm_file, output_dir):
 	port_values = {}
-	output_list = output_list + read_jpm_file(jpm_file, port_values, output_dir)
-	return port_values['date']
+	csv_files = read_jpm_file(jpm_file, port_values, output_dir)
+	return port_values['date'], csv_files
 
 
 
-def handle_bochk_position(bochk_mc_file, bochk_hk_file, output_dir, output_list):
+def handle_bochk_position(bochk_position_file, source, output_dir):
+	"""
+	source: 'hk' or 'mc' to indicate which accounts they contain
+	"""
 	port_values = {}
-	read_file(bochk_mc_file, port_values)
-	output_list.append(write_holding_csv(port_values, output_dir, 'trustee_mc_bochk'))
-
-	port_values = {}
-	read_file(bochk_hk_file, port_values)
-	output_list.append(write_holding_csv(port_values, output_dir, 'trustee_hk_bochk'))
-	return port_values['holding_date']
+	read_holdings_bochk(bochk_position_file, port_values)
+	return port_values['holding_date'], \
+			write_holding_csv(port_values, output_dir, 'trustee_' + source + '_bochk_')
 
 
 
-def handle_bochk_cash(bochk_cash_files, cash_date, output_dir, output_list):
-	port_values = {}
-	read_bochk_cash_files(bochk_cash_files, port_values)
+def handle_bochk_cash(bochk_cash_files, cash_date, output_dir):
+	"""
+	Read a list of BOC HK bank statement files, produce a csv file that reflects
+	the cash holding of all accounts.
+
+	Note: sometimes we have multiple bank statements for the same account,
+	then the account with a later date overrides others for the same account.
+	"""
+	cash_entries = []
+	for filename in bochk_cash_files:
+		port_values = {}
+		read_cash_bochk(filename, port_values)
+		update_cash_entries(port_values, cash_entries)
+
+	port_values['cash'] = cash_entries
 	port_values['cash_date'] = cash_date
-	output_list.append(write_cash_csv(port_values, output_dir, 'trustee_bochk'))
+	return write_cash_csv(port_values, output_dir, 'trustee_bochk_')
+
+
+
+def update_cash_entries(port_values, cash_entries):
+	for cash_entry in port_values['cash']:
+		cash_entry['date'] = port_values['cash_date']
+		found_existing_entry = False
+
+		for existing_entry in cash_entries:
+			if cash_entry['Account Name'] == existing_entry['Account Name'] \
+				and cash_entry['Currency'] == existing_entry['Currency']:
+
+				if cash_entry['date'] > existing_entry['date']:
+					overwrite_entry(existing_entry, cash_entry)
+
+				found_existing_entry = True
+				break
+		# finish searching for existing entry
+
+		if not found_existing_entry:
+			cash_entries.append(cash_entry)
+
+
+
+def overwrite_entry(old_cash_entry, new_entry):
+	for fld in new_entry:
+		old_cash_entry[fld] = new_entry[fld]
+
+
+
+def move_files(file_list):
+	"""
+	Move all files except the BOC HK broker statement and JPM broker statement
+	to the 'cash statement' folder under the folder containing the files.
+	"""
+	dest_dir = ''
+	if len(file_list) > 0:
+		filename_no_path = file_list[0].split('\\')[-1]
+		dest_dir = file_list[0][:-len(filename_no_path)]
+		# print(dest_dir)
+
+	for filename in file_list:
+		filename_no_path = filename.split('\\')[-1]
+		
+		if filename_no_path.startswith('JP Morgan Broker Statement') \
+			or filename_no_path.startswith('BOC Broker Statement'):
+			continue
+
+		copy2(filename, join(dest_dir, 'cash statement'))
+		remove(filename)
 
 
 
 
 if __name__ == '__main__':
 	"""
-	Use the following to invoke the program if you don't want to save to 
-	database, no upload and no notification email sending:
-
-	python recon_helper.py --mode simple
-
-	Or if you want all of the functions to be there, then:
-
-	python recon_helper.py
+	Used to manually convert the files.
 
 	"""
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--mode', nargs='?', metavar='mode', default='normal')
-	args = parser.parse_args()
 
-	try:
-		output_dir = get_output_directory()
-		files = search_files(get_input_directory(), output_dir)
-		result = convert(files, output_dir)
-		upload_result = {'pass':[], 'fail':[]}
-		if len(result['pass']) == 0 and len(result['fail']) == 0:
-			print('no files to convert now.')
-			logger.info('recon_helper: no files to convert now.')
-		
-		elif args.mode == 'normal':
-			save_result(result)
-			
-			if len(result['output']) > 0:
-				upload_result = upload(result['output'])
-				# copy_files(upload_result['fail'], get_backup_directory())
+	input_dir = r'C:\temp\Reconciliation\trustee'
+	file_list = [join(input_dir, f) for f in listdir(input_dir) if isfile(join(input_dir, f))]
+	output_dir = r'C:\temp\Reconciliation'
 
-			send_notification(result, upload_result)
-
-		else:
-			print('Working in simple mode, no database saving, no upload, no notification.')
-
-		show_result(result, upload_result)			
-		get_db_connection().close()
-	except:
-		print('Something goes wrong, check log file.')
-		logger.error('recon_helper: errors occurred')
-		logger.exception('recon_helper:')
+	pass_list = []
+	fail_list = []
+	if convert_trustee(file_list, output_dir, pass_list, fail_list) == []:
+		print('something goes wrong, check log file')
 	else:
 		print('OK')

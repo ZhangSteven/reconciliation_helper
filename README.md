@@ -42,6 +42,19 @@ Todo
 6. Add upload result to the database, so that we don't need to upload old files?
 
 
+++++++++++
+Todo:
+++++++++++
+1. Find out what portfolio is this "CLT-CLI HK BR (CLASS A- HK) TRUST FUND"? Currently it is mapped to portfolio code '99999'. Once found, please update open_bochk.py map_cash_to_portfolio_id() function.
+
+
+
+++++++++++
+ver 0.24
+++++++++++
+1. trustee.py is added to include convert_trustee() function. 
+
+
 
 ++++++++++
 ver 0.23
