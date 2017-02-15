@@ -4,7 +4,7 @@
 #
 # 
 
-from reconciliation_helper.recon_helper import read_jpm_file
+from reconciliation_helper.recon_utility import read_jpm_file
 from reconciliation_helper.utility import logger
 from jpm.open_jpm import get_portfolio_date_as_string
 from bochk.open_bochk import read_cash_bochk, read_holdings_bochk, \
@@ -24,6 +24,10 @@ class InconsistentStatementDate(Exception):
 
 
 def convert_trustee(file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_trustee(): {0} files'.format(len(file_list)))
+	if len(file_list) == 0:
+		return []
+
 	bochk_cash_files = []
 	for filename in file_list:
 		filename_no_path = filename.split('\\')[-1]
@@ -56,18 +60,12 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 
 	except:
 		logger.exception('convert_trustee()')
-		fail_list = fail_list + [jpm_file, bochk_mc_file, bochk_hk_file]
-		output_list = []
+		fail_list.extend([jpm_file, bochk_mc_file, bochk_hk_file])
+		return []
 	else:
-		pass_list = pass_list + [jpm_file, bochk_mc_file, bochk_hk_file]
-		output_list = jpm_csv_files + [bochk_mc_csv, bochk_hk_csv, bochk_cash_csv]
+		pass_list.extend([jpm_file, bochk_mc_file, bochk_hk_file])
 		move_files(file_list)
-
-	# print(pass_list)
-	# print(fail_list)
-	# print(output_list)
-
-	return output_list
+		return jpm_csv_files + [bochk_mc_csv, bochk_hk_csv, bochk_cash_csv]
 
 
 
@@ -129,7 +127,8 @@ def handle_bochk_cash(bochk_cash_files, cash_date, output_dir):
 		port_values = {}
 		read_cash_bochk(filename, port_values)
 		update_cash_entries(port_values, cash_entries)
-
+	
+	port_values = {}
 	port_values['cash'] = cash_entries
 	port_values['cash_date'] = cash_date
 	return write_cash_csv(port_values, output_dir, 'trustee_bochk_')
@@ -172,7 +171,7 @@ def move_files(file_list):
 	if len(file_list) > 0:
 		filename_no_path = file_list[0].split('\\')[-1]
 		dest_dir = file_list[0][:-len(filename_no_path)]
-		# print(dest_dir)
+		print(dest_dir)
 
 	for filename in file_list:
 		filename_no_path = filename.split('\\')[-1]
@@ -195,7 +194,7 @@ if __name__ == '__main__':
 
 	input_dir = r'C:\temp\Reconciliation\trustee'
 	file_list = [join(input_dir, f) for f in listdir(input_dir) if isfile(join(input_dir, f))]
-	output_dir = r'C:\temp\Reconciliation'
+	output_dir = r'C:\temp\Reconciliation\result'
 
 	pass_list = []
 	fail_list = []

@@ -12,6 +12,9 @@ from xlrd import open_workbook
 from reconciliation_helper.utility import logger, get_current_path, \
 											get_output_directory, \
 											get_input_directory
+from reconciliation_helper.recon_utility import read_jpm_file, \
+											get_filename_prefix
+from reconciliation_helper.trustee import convert_trustee
 from reconciliation_helper.record import filter_files, save_result, \
 											get_db_connection
 from reconciliation_helper.sftp import upload
@@ -108,17 +111,6 @@ def convert(files, output_dir):
 
 
 
-def read_jpm_file(filename, port_values, output_dir):
-	"""
-	Read a JPM broker statement file, return the two csv filenames.
-	"""
-	wb = open_workbook(filename=filename)
-	ws = wb.sheet_by_index(0)
-	open_jpm.read_jpm(ws, port_values)
-	return open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
-
-
-
 def convert_jpm(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
@@ -186,24 +178,6 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 			pass_list.append(filename)
 
 	return output_list
-
-
-
-def convert_trustee(file_list, output_dir, pass_list, fail_list):
-	pass
-
-
-
-def get_filename_prefix(filename, source):
-	"""
-	Work out a prefix for the filename depending on the input directory.
-	"""
-	folder_name = filename.split('\\')[-2]
-	prefix = ''
-	for token in folder_name.lower().split():
-		prefix = prefix + token + '_'
-
-	return prefix + source + '_'
 
 
 

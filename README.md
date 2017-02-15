@@ -50,6 +50,13 @@ Todo:
 
 
 ++++++++++
+ver 0.25
+++++++++++
+1. convert_trustee() is added to enable automatic conversion, plus fix some minor bugs in convert_trustee(), like circular import and when the input file list is empty, it still do some processing.
+
+
+
+++++++++++
 ver 0.24
 ++++++++++
 1. trustee.py is added to include convert_trustee() function. 
