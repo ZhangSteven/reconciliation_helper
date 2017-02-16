@@ -15,6 +15,8 @@ from reconciliation_helper.utility import logger, get_current_path, \
 from reconciliation_helper.recon_utility import read_jpm_file, \
 											get_filename_prefix
 from reconciliation_helper.trustee import convert_trustee
+from reconciliation_helper.greenblue import filter_greenblue, convert_CCB_cash, \
+											convert_CCB_position
 from reconciliation_helper.record import filter_files, save_result, \
 											get_db_connection
 from reconciliation_helper.sftp import upload
@@ -86,11 +88,9 @@ def convert(files, output_dir):
 	"""
 	logger.debug('convert(): output to: {0}'.format(output_dir))
 	func_map = {
-		# 'clo equity': convert_jpm,
 		'listco equity': convert_jpm,
 		'concord': convert_bochk,
-		'greenblue': convert_bochk,
-		# 'clo bond': convert_bochk,
+		'greenblue': convert_greenblue,
 		'dif': convert_dif,
 		'special event fund': convert_bochk,
 		'trustee': convert_trustee
@@ -121,7 +121,7 @@ def convert_jpm(file_list, output_dir, pass_list, fail_list):
 			# open_jpm.read_jpm(ws, port_values)
 			# output = open_jpm.write_csv(port_values, output_dir, get_filename_prefix(filename, 'jpm'))
 			# output_list = output_list + output
-			output_list = output_list + read_jpm_file(filename, port_values, output_dir)
+			output_list.extend(read_jpm_file(filename, port_values, output_dir))
 		except:
 			logger.exception('convert_jpm()')
 			fail_list.append(filename)
@@ -177,6 +177,17 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 		else:
 			pass_list.append(filename)
 
+	return output_list
+
+
+
+def convert_greenblue(file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_greenblue(): {0} files'.format(len(file_list)))
+	bochk_files, CCB_cash_files, CCB_position_files = filter_greenblue(file_list)
+	output_list = convert_bochk(bochk_files, output_dir, pass_list, fail_list)
+	output_list.extend(convert_CCB_cash(CCB_cash_files, output_dir, pass_list, fail_list))
+	output_list.extend(convert_CCB_position(CCB_position_files, output_dir, pass_list, fail_list))
+	
 	return output_list
 
 
