@@ -31,18 +31,19 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 	bochk_cash_files = []
 	for filename in file_list:
 		filename_no_path = filename.split('\\')[-1]
-		if filename_no_path.startswith('BOC Bank Statement') \
+		if filename_no_path.lower().startswith('boc bank statement') \
 			and is_bochk_cash_file(filename):
 			bochk_cash_files.append(filename)
 		
-		elif filename_no_path.startswith('JP Morgan Broker Statement'):
+		elif filename_no_path.lower().startswith('jp morgan broker statement'):
 			jpm_file = filename
 		
-		elif filename_no_path.startswith('BOC Broker Statement') \
-			and filename_no_path.endswith('(Class A-MC).xls'):
+		elif filename_no_path.lower().startswith('boc broker statement') \
+			and (filename_no_path.lower().endswith('(class a-mc).xls') or \
+				filename_no_path.lower().endswith('(a-mc).xls')):
 			bochk_mc_file = filename
 		
-		elif filename_no_path.startswith('BOC Broker Statement'):
+		elif filename_no_path.lower().startswith('boc broker statement'):
 			bochk_hk_file = filename
 	# end of for loop
 
@@ -176,8 +177,8 @@ def move_files(file_list):
 	for filename in file_list:
 		filename_no_path = filename.split('\\')[-1]
 		
-		if filename_no_path.startswith('JP Morgan Broker Statement') \
-			or filename_no_path.startswith('BOC Broker Statement'):
+		if filename_no_path.lower().startswith('jp morgan broker statement') \
+			or filename_no_path.lower().startswith('boc broker statement'):
 			continue
 
 		copy2(filename, join(dest_dir, 'cash statement'))

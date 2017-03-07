@@ -25,6 +25,9 @@ def filter_files(file_list):
 	"""
 	process_list = []
 	for file in file_list:
+		if file.split('\\')[-1].startswith('~'):
+			continue
+			
 		if has_valid_extension(file):
 			m_datetime = get_file_timestamp(file)
 			if m_datetime is None:	# not processed before

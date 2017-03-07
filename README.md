@@ -21,7 +21,6 @@ Known Issues
 
 
 
-
 ++++++++++
 Todo
 ++++++++++
@@ -46,6 +45,17 @@ Todo
 Todo:
 ++++++++++
 1. Find out what portfolio is this "CLT-CLI HK BR (CLASS A- HK) TRUST FUND"? Currently it is mapped to portfolio code '99999'. Once found, please update open_bochk.py map_cash_to_portfolio_id() function.
+
+
+
+++++++++++
+ver 0.26
+++++++++++
+1. Module greenblue.py has been added. Now it only filters out BOCHK files to handle, no CCB file handling yet.
+
+2. The trustee sometimes put (A-MC) instead of (Class-A MC) in the BOCHK broker statement file, support for this filename has been added.
+
+3. When something goes wrong in the conversion or upload process, the mail subject line becomes 'Error occurred during ...'.
 
 
 

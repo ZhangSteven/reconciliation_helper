@@ -60,6 +60,8 @@ if __name__ == '__main__':
 	"""
 	from os.path import isfile, isdir, join
 	from os import listdir
+	from reconciliation_helper.recon_helper import convert_greenblue
+	
 	input_dir = r'C:\temp\Reconciliation\greenblue'
 	file_list = [join(input_dir, f) for f in listdir(input_dir) if isfile(join(input_dir, f))]
 	output_dir = r'C:\temp\Reconciliation\result'

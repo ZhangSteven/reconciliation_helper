@@ -188,12 +188,6 @@ def get_mail_recipients():
 
 
 
-def get_mail_subject():
-	global config
-	return config['email']['subject']
-
-
-
 def get_mail_server():
 	global config
 	return config['email']['server']

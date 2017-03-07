@@ -8,7 +8,6 @@ import smtplib
 from email.mime.text import MIMEText
 from reconciliation_helper.utility import logger, get_mail_sender, \
 											get_mail_recipients, \
-											get_mail_subject, \
 											get_mail_server, \
 											get_mail_timeout
 
@@ -20,7 +19,7 @@ def send_notification(result, upload_result):
 	results.
 	"""
 	msg = MIMEText(create_msg_text(result, upload_result))
-	msg['Subject'] = get_mail_subject()
+	msg['Subject'] = get_mail_subject(result)
 	msg['From'] = get_mail_sender()
 	msg['To'] = ', '.join([to.strip() for to in get_mail_recipients().split(',')])
 
@@ -55,6 +54,14 @@ def create_msg_text(result, upload_result):
 		msg = msg + 'failed: {0}\n'.format(file)
 
 	return msg
+
+
+
+def get_mail_subject(result):
+	if len(result['fail']) == 0 and len(upload_result['fail']) == 0:
+		return 'Automatic conversion and upload results for Geneva reconciliation'
+	else:
+		return 'Error occurred during Geneva reconciliation conversion or upload'
 
 
 
