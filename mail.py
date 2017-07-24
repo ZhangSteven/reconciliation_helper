@@ -19,7 +19,7 @@ def send_notification(result, upload_result):
 	results.
 	"""
 	msg = MIMEText(create_msg_text(result, upload_result))
-	msg['Subject'] = get_mail_subject(result)
+	msg['Subject'] = get_mail_subject(result, upload_result)
 	msg['From'] = get_mail_sender()
 	msg['To'] = ', '.join([to.strip() for to in get_mail_recipients().split(',')])
 
@@ -57,7 +57,7 @@ def create_msg_text(result, upload_result):
 
 
 
-def get_mail_subject(result):
+def get_mail_subject(result, upload_result):
 	if len(result['fail']) == 0 and len(upload_result['fail']) == 0:
 		return 'Automatic conversion and upload results for Geneva reconciliation'
 	else:

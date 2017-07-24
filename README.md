@@ -49,6 +49,13 @@ Todo:
 
 
 ++++++++++
+ver 0.27
+++++++++++
+1. Modified trustee.py, convert_trustee() function. The assumption in the recon_helper.py workflow is that none of the convert_xx() functions (convert_jpm, convert_bochk, etc.) throws exceptions so that subsequent upload process won't be interrupted even if one of the custodian bank files has a problem. But convert_trustee() throws an exception when one of the brokers files are missing (jpm_file, bochk_mc_file, bochk_hk_file). This is fixed.
+
+
+
+++++++++++
 ver 0.26
 ++++++++++
 1. Module greenblue.py has been added. Now it only filters out BOCHK files to handle, no CCB file handling yet.

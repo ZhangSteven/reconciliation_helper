@@ -90,6 +90,7 @@ def convert(files, output_dir):
 	func_map = {
 		'listco equity': convert_jpm,
 		'concord': convert_bochk,
+		'ffx': convert_bochk,
 		'greenblue': convert_greenblue,
 		'dif': convert_dif,
 		'special event fund': convert_bochk,

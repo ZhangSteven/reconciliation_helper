@@ -61,7 +61,16 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 
 	except:
 		logger.exception('convert_trustee()')
-		fail_list.extend([jpm_file, bochk_mc_file, bochk_hk_file])
+		# if one of the variables does not exist, then this will fail:
+		# fail_list.extend([jpm_file, bochk_mc_file, bochk_hk_file])
+		# 
+		# so, change into below:
+		if 'jpm_file' in locals():
+			fail_list.append(jpm_file)
+		if 'bochk_mc_file' in locals():
+			fail_list.append(bochk_mc_file)
+		if 'bochk_hk_file' in locals():
+			fail_list.append(bochk_hk_file)
 		return []
 	else:
 		pass_list.extend([jpm_file, bochk_mc_file, bochk_hk_file])
