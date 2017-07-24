@@ -4,8 +4,8 @@ __pycache__/
 # ignore the log file
 recon_helper.log
 
-# ignore the database file
-records.db
+# actually we need to sync the database file
+# records.db
 
 # ignore the config file, because development and production environment
 # is different
@@ -14,6 +14,12 @@ recon_helper.config
 # ignore the result files
 samples/base_dir1/result/*
 samples/base_dir2/result/*
+
+# ignore the source files for testing. Because if you sync them over using git,
+# the last modified date will be changed to the syncing time, thus fail some of
+# the tests, so you need to manually copy these files over.
+samples/source/
+samples/source2/
 
 # the testing winscp scripts and logs
 samples/winscp_script/
