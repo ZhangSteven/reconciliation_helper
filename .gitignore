@@ -4,7 +4,7 @@ __pycache__/
 # ignore the log file
 recon_helper.log
 
-# actually we need to sync the database file
+# ignore the database
 records.db
 
 # ignore the config file, because development and production environment
