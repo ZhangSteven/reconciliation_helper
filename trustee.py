@@ -74,7 +74,11 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 		return []
 	else:
 		pass_list.extend([jpm_file, bochk_mc_file, bochk_hk_file])
-		move_files(file_list)
+		try:
+			move_files(file_list)
+		except:
+			logger.exception('convert_trustee(): error occurred while moving files, still continue.')
+
 		return jpm_csv_files + [bochk_mc_csv, bochk_hk_csv, bochk_cash_csv]
 
 

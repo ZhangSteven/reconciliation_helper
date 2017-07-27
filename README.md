@@ -24,27 +24,18 @@ Known Issues
 ++++++++++
 Todo
 ++++++++++
-1. Do we need to move testing mode to config file? or some default parameter to functions.
-
-2. Add force process options, so that we can force process certain files:
+1. Add force process options, so that we can force process certain files:
 
 	a. files in a certain folder.
 	b. files whose last modified date is within X days compared that in the record.
 	c. a particular file
 
-3. Add a small tool to show its content, and delete all its contents, maybe just a short description on how to use sqlite3 CLI to do the trick?
-
-4. Let write_csv() functions return the resulting file path, so that the upload function can use them to upload.
-
-5. Add send email function to notify user about the process results.
-
-6. Add upload result to the database, so that we don't need to upload old files?
 
 
 ++++++++++
-Todo:
+ver 0.28
 ++++++++++
-1. Find out what portfolio is this "CLT-CLI HK BR (CLASS A- HK) TRUST FUND"? Currently it is mapped to portfolio code '99999'. Once found, please update open_bochk.py map_cash_to_portfolio_id() function.
+1. Inside trustee.py, convert_trustee() function. Put a try/catch clause around the move() function. The reason is similar to 0.27 version, because when access rights have a problem, then move() function throws an exception, making subsequent upload and email notification process to stop. The utimate goal is to make convert_trustee() not to throw any exceptions even if something goes wrong.
 
 
 
