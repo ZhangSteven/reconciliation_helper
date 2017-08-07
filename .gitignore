@@ -5,7 +5,7 @@ __pycache__/
 recon_helper.log
 
 # ignore the database
-# records.db
+records.db
 
 # ignore the config file, because development and production environment
 # is different

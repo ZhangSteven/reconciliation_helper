@@ -31,6 +31,12 @@ Todo
 	c. a particular file
 
 
+++++++++++
+ver 0.29
+++++++++++
+1. Added support for Macau balanced fund and Macau guarantee fund.
+
+
 
 ++++++++++
 ver 0.28

@@ -28,5 +28,8 @@ def get_filename_prefix(filename, source):
 	for token in folder_name.lower().split():
 		prefix = prefix + token + '_'
 
-	return prefix + source + '_'	
+	if source == '':
+		return prefix
+	else:
+		return prefix + source + '_'	
 
