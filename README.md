@@ -31,6 +31,14 @@ Todo
 	c. a particular file
 
 
+
+++++++++++++++++++
+ver 0.30@2017-8-9
+++++++++++++++++++
+1. Added support for Star Helios fund (citibank).
+
+
+
 ++++++++++
 ver 0.29
 ++++++++++

@@ -24,6 +24,7 @@ from reconciliation_helper.mail import send_notification
 from jpm import open_jpm
 from bochk import open_bochk
 from DIF import open_dif, open_bal
+from citi import open_citi
 
 
 
@@ -96,7 +97,8 @@ def convert(files, output_dir):
 		'special event fund': convert_bochk,
 		'trustee': convert_trustee,
 		'macau balanced fund': convert_bal,
-		'macau guarantee fund': convert_bal
+		'macau guarantee fund': convert_bal,
+		'star helios': convert_citi
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
@@ -193,6 +195,23 @@ def convert_bal(file_list, output_dir, pass_list, fail_list):
 			output_list = output_list + output
 		except:
 			logger.exception('convert_bal()')
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
+
+def convert_citi(file_list, output_dir, pass_list, fail_list):
+	output_list = []
+	for filename in file_list:
+		port_values = {}
+		try:
+			output = open_citi.open_citi(filename, port_values, output_dir, get_filename_prefix(filename, 'citi'))
+			output_list = output_list + output
+		except:
+			logger.exception('convert_citi()')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
