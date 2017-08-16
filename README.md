@@ -31,6 +31,15 @@ Todo
 	c. a particular file
 
 
+++++++++++++++++++
+ver 0.31@2017-8-16
+++++++++++++++++++
+1. Fixed logging issue by using new stand way of logging: logging.getLogger(__name__).
+2. Now log to 2 files, one for everything, another just for errors.
+3. Added DIF fund nav/units/unit_price upload to server, after these numbers are validated.
+4. Valiation criteria: calculated unit_price and the unit price read from the excel file, should have a different < 0.0001 (i.e., the first 4 decimal points are identical).
+
+
 
 ++++++++++++++++++
 ver 0.30@2017-8-9

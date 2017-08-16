@@ -280,7 +280,7 @@ def validate_and_upload(port_values):
 	19437, 30003, 30004
 	"""
 	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio_id']))
-	if abs(port_values['nav']/port_values['number_of_units'] - port_values['unit_price']) < 1.0e-5:
+	if abs(port_values['nav']/port_values['number_of_units'] - port_values['unit_price']) < 1.0e-4:
 		if upload_nav(port_values['portfolio_id'], 
 					port_values['nav'],
 					'-'.join([str(port_values['date'].year), str(port_values['date'].month), str(port_values['date'].day)]),
