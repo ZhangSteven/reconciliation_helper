@@ -5,7 +5,6 @@
 # 
 
 import configparser, os
-from config_logging.file_logger import get_file_logger
 
 
 
@@ -86,19 +85,6 @@ def enable_test_mode(db_conn):
 def get_test_db_connection():
 	global test_conn
 	return test_conn
-
-
-
-def _setup_logging():
-    fn = get_base_directory() + '\\' + config['logging']['log_file']
-    log_level = config['logging']['log_level']
-    return get_file_logger(fn, log_level)
-
-
-
-# initialized only once when this module is first imported by others
-if not 'logger' in globals():
-	logger = _setup_logging()
 
 
 

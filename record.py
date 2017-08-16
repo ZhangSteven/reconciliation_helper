@@ -7,8 +7,10 @@
 import sqlite3
 import os, time
 from datetime import datetime, timedelta
-from reconciliation_helper.utility import logger, get_current_path, in_test_mode, \
+from reconciliation_helper.utility import get_current_path, in_test_mode, \
 											enable_test_mode, get_test_db_connection
+import logging
+logger = logging.getLogger(__name__)
 
 
 

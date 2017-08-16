@@ -7,11 +7,13 @@
 import time, os
 from os.path import join
 from subprocess import run, TimeoutExpired, CalledProcessError
-from reconciliation_helper.utility import logger, get_winscp_script_directory, \
+from reconciliation_helper.utility import get_winscp_script_directory, \
 											get_winscp_log_directory, \
 											get_winscp_path, get_timeout, \
 											get_sftp_server, get_sftp_user, \
 											get_sftp_password
+import logging
+logger = logging.getLogger(__name__)
 
 
 

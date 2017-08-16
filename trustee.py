@@ -5,7 +5,6 @@
 # 
 
 from reconciliation_helper.recon_utility import read_jpm_file
-from reconciliation_helper.utility import logger
 from jpm.open_jpm import get_portfolio_date_as_string
 from bochk.open_bochk import read_cash_bochk, read_holdings_bochk, \
 								write_holding_csv, write_cash_csv, \
@@ -16,6 +15,9 @@ import shutil
 from os.path import isfile, isdir, join
 from os import listdir, remove
 from shutil import copy2
+import logging
+logger = logging.getLogger(__name__)
+
 
 
 class InconsistentStatementDate(Exception):

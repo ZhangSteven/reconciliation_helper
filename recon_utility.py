@@ -3,8 +3,9 @@
 
 
 from xlrd import open_workbook
-from reconciliation_helper.utility import logger
 from jpm import open_jpm
+import logging
+logger = logging.getLogger(__name__)
 
 
 

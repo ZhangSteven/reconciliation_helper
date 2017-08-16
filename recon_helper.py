@@ -9,7 +9,7 @@ from os import listdir
 from os.path import isfile, isdir, join
 from shutil import copy2
 from xlrd import open_workbook
-from reconciliation_helper.utility import logger, get_current_path, \
+from reconciliation_helper.utility import get_current_path, \
 											get_output_directory, \
 											get_input_directory
 from reconciliation_helper.recon_utility import read_jpm_file, \
@@ -25,6 +25,10 @@ from jpm import open_jpm
 from bochk import open_bochk
 from DIF import open_dif, open_bal
 from citi import open_citi
+from webservice_client.nav import upload_nav
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 
@@ -175,6 +179,7 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 		port_values = {}
 		try:
 			output = open_dif.open_dif(filename, port_values, output_dir)
+			validate_and_upload(port_values)
 			output_list = output_list + output
 		except:
 			logger.exception('convert_dif()')
@@ -269,21 +274,48 @@ def show_result(result, upload_result):
 
 
 
+def validate_and_upload(port_values):
+	"""
+	Validate the nav, num_units, unit price for the daily funds:
+	19437, 30003, 30004
+	"""
+	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio_id']))
+	if abs(port_values['nav']/port_values['number_of_units'] - port_values['unit_price']) < 1.0e-5:
+		if upload_nav(port_values['portfolio_id'], 
+					port_values['nav'],
+					'-'.join([str(port_values['date'].year), str(port_values['date'].month), str(port_values['date'].day)]),
+					port_values['number_of_units'],
+					port_values['unit_price']):
+
+			logger.debug('validate_and_upload(): upload successful.')
+
+		else:
+			logger.error('validate_and_upload(): upload failed.')
+
+	else:
+		logger.error('validate_and_upload(): validation failed, nav={0}, units={1}, unit price={2}'.
+						format(port_values['nav'], port_values['number_of_units'], port_values['unit_price']))
+
+
+
 
 if __name__ == '__main__':
 	"""
 	Use the following to invoke the program if you don't want to save to 
 	database, no upload and no notification email sending:
 
-	python recon_helper.py --mode simple
+	python recon_helper.py
 
 	Or if you want all of the functions to be there, then:
 
-	python recon_helper.py
+	python recon_helper.py --mode production
 
 	"""
+	import logging.config
+	logging.config.fileConfig('logging.config', disable_existing_loggers=False)
+
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--mode', nargs='?', metavar='mode', default='normal')
+	parser.add_argument('--mode', nargs='?', metavar='mode', default='test')
 	args = parser.parse_args()
 
 	try:
@@ -292,10 +324,9 @@ if __name__ == '__main__':
 		result = convert(files, output_dir)
 		upload_result = {'pass':[], 'fail':[]}
 		if len(result['pass']) == 0 and len(result['fail']) == 0:
-			print('no files to convert now.')
 			logger.info('recon_helper: no files to convert now.')
 		
-		elif args.mode == 'normal':
+		elif args.mode == 'production':
 			save_result(result)
 			
 			if len(result['output']) > 0:
@@ -305,13 +336,11 @@ if __name__ == '__main__':
 			send_notification(result, upload_result)
 
 		else:
-			print('Working in simple mode, no database saving, no upload, no notification.')
+			logger.info('Working in test mode, no database/ftp/email notification.')
 
 		show_result(result, upload_result)			
 		get_db_connection().close()
+
 	except:
-		print('Something goes wrong, check log file.')
-		logger.error('recon_helper: errors occurred')
-		logger.exception('recon_helper:')
-	else:
-		print('OK')
+		logger.exception('recon_helper: errors occurred')
+

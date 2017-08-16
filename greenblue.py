@@ -3,10 +3,10 @@
 # Read JPM and BOCHK files from trustee.
 #
 # 
-
-from reconciliation_helper.utility import logger
 from datetime import datetime
 from xlrd import open_workbook
+import logging
+logger = logging.getLogger(__name__)
 
 
 

@@ -6,10 +6,12 @@
 from os.path import join
 import smtplib
 from email.mime.text import MIMEText
-from reconciliation_helper.utility import logger, get_mail_sender, \
+from reconciliation_helper.utility import get_mail_sender, \
 											get_mail_recipients, \
 											get_mail_server, \
 											get_mail_timeout
+import logging
+logger = logging.getLogger(__name__)
 
 
 
