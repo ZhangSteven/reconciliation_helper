@@ -31,6 +31,14 @@ Todo
 	c. a particular file
 
 
+
+++++++++++++++++++
+ver 0.32@2017-8-17
+++++++++++++++++++
+1. Added Macau balanced fund and guarantee fund nav upload to server.
+
+
+
 ++++++++++++++++++
 ver 0.31@2017-8-16
 ++++++++++++++++++
