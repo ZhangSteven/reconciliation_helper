@@ -5,8 +5,8 @@
 # 
 
 import sqlite3
-import os, time
-from datetime import datetime, timedelta
+import os
+import datetime
 from reconciliation_helper.utility import get_current_path, in_test_mode, \
 											enable_test_mode, get_test_db_connection
 import logging
@@ -51,15 +51,11 @@ def save_result(result):
 	Save the result to database.
 	"""
 	c = get_db_cursor()
-	pass_records = create_status_records(result['pass'], 'pass')
-	fail_records = create_status_records(result['fail'], 'fail')
-	c.executemany('INSERT OR REPLACE INTO file_status (file_fullpath, m_time, status) VALUES (?, ?, ?)', \
-					pass_records+fail_records)
-
-	process_records = create_process_records(result['pass'], result['fail'])
-	c.executemany('INSERT INTO process_result (file_fullpath, m_time, record_time, result) VALUES (?, ?, ?, ?)', \
-					process_records)
-
+	time_stamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	c.executemany('INSERT INTO process_result (file_name, md5, status, process_time) VALUES (?, ?, 1, time_stamp)', \
+					create_process_records(result['pass']))
+	c.executemany('INSERT INTO process_result (file_name, md5, status, process_time) VALUES (?, ?, 0, time_stamp)', \
+					create_process_records(result['fail']))
 	get_db_connection().commit()
 
 
@@ -73,9 +69,6 @@ def get_db_cursor():
 	http://stackoverflow.com/questions/279561/what-is-the-python-equivalent-of-static-variables-inside-a-function
 	"""
 	if 'cursor' not in get_db_cursor.__dict__:
-		get_db_cursor.cursor = None
-
-	if get_db_cursor.cursor is None:
 		get_db_cursor.cursor = get_db_connection().cursor()
 
 	return get_db_cursor.cursor
@@ -112,96 +105,24 @@ def has_valid_extension(file):
 
 
 
-def create_status_records(file_list, status):
+def create_process_records(file_list):
 	"""
 	create records to be populated into table file_status.
 	"""
 	records = []
 	for file in file_list:
-		time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', 
-									time.localtime(get_modified_time_stamp(file)))
-		records.append((file, time_stamp, status))
+		records.append((get_file_name(file), get_md5(file)))
 
 	return records
 
 
 
-def create_process_records(pass_list, fail_list):
-	records = []
-	record_timestamp = time.strftime('%Y-%m-%d %H:%M:%S', 
-									time.localtime(time.time()))
-	create_process_records_detail(records, pass_list, record_timestamp, 'pass')
-	create_process_records_detail(records, fail_list, record_timestamp, 'fail')
-	# create_process_records_detail(records, ignore_list, record_timestamp, 'ignore')
-	return records
-
-
-
-def create_process_records_detail(records, file_list, record_timestamp, status):
-	for file in file_list:
-		m_timestamp = time.strftime('%Y-%m-%d %H:%M:%S', 
-									time.localtime(get_modified_time_stamp(file)))
-		records.append((file, m_timestamp, record_timestamp, status))
-
-
-
-def get_modified_time_stamp(file):
-	return os.path.getmtime(file)
-
-
-
-def modified_later_than_record(file, m_datetime):
+def get_file_name(file_full_path):
 	"""
-	Test whether a file is updated since the last time it was processed and
-	recorded in the database file_status table.
+	from the file full path, like
+
+	C:\Program Files\Git\git\reconciliation_helper\samples\abc.xls
+
+	workout the file name abc.xls
 	"""
-	# when a file's last modified time is saved into database, its precision
-	# is up to one second. E.g., its last modified time is 2012-7-8 2:15:10.999,
-	# it is recored as 2012-7-8 2:15:10. The 0.999 second is gone. So unless
-	# a file's last modified time is at least 1 seond newer than the record, 
-	# we won't consider the file is newer.
-	if datetime.fromtimestamp(get_modified_time_stamp(file)) - m_datetime > \
-		timedelta(seconds=1):
-		return True
-	else:
-		return False
-
-
-
-def get_file_timestamp(file):
-	"""
-	From the "file_status" table read the last modified datetime for the file,
-	if the file does not exist (not processed before), then return None.
-	"""
-	c = get_db_cursor()
-	t = (file, )
-	c.execute('SELECT * FROM file_status WHERE file_fullpath=?', t)
-	result = c.fetchone()
-
-	if result is None:
-		return None
-	else:
-		return dt_string_to_datetime(result[1])
-
-
-
-def dt_string_to_datetime(dt_string):
-	"""
-	convert a string in 'yyyy-mm-dd hh:mm:ss' format to a datetime
-	object.
-	"""
-	dt_token = dt_string.split()[0]
-	tm_token = dt_string.split()[1]
-	year, month, day = parse_string(dt_token, '-')
-	hour, minute, second = parse_string(tm_token, ':')
-	return datetime(year, month, day, hour=hour, minute=minute, second=second)
-
-
-
-def parse_string(a_string, separator):
-	"""
-	Convert string of form 'yyyy-mm-dd' or 'hh-mm-ss' into three
-	integers.
-	"""
-	a_list = a_string.split(separator)
-	return int(a_list[0]), int(a_list[1]), int(a_list[2])
+	return file_full_path.split('\\')[-1]
