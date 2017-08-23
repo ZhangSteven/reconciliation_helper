@@ -6,7 +6,7 @@
 
 import sqlite3
 import os
-import datetime
+from datetime import datetime, timedelta
 import hashlib
 from reconciliation_helper.utility import in_test_mode, enable_test_mode, \
 											get_test_db_connection, get_db_file
@@ -21,14 +21,15 @@ def filter_files(file_list):
 	criteria:
 
 	1. Format: files must be in 'xls' or 'xlsx' format.
-	2. Not processed before: files not found in the file_status table.
-	3. Updated since last processed: if a file was processed before, i.e.,
-		in the file_status table, but its last modified time stamp is newer 
-		than that in the record.
+	2. Last modified date: should be within 10 days.
+	2. Not processed before or updated since last processed: if a file was 
+		processed before, it's filename include the path and file's SHA256
+		hash would be in the process_result table.
 	"""
 	process_list = []
 	for file in file_list:
-		if file.split('\\')[-1].startswith('~') or not has_valid_extension(file):
+		if file.split('\\')[-1].startswith('~') or not has_valid_extension(file) or \
+			files_modified_earlier_than_days(file, 10):
 			continue
 			
 		if not db_record_exists(file):
@@ -46,7 +47,7 @@ def save_result(result):
 	Save the result to database.
 	"""
 	c = get_db_cursor()
-	time_stamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	time_stamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 	c.executemany('INSERT INTO process_result (file_path, hash, result, time_stamp) VALUES (?, ?, ?, ?)', \
 					create_process_records(result['pass'], 1, time_stamp))
 	c.executemany('INSERT INTO process_result (file_path, hash, result, time_stamp) VALUES (?, ?, ?, ?)', \
@@ -71,20 +72,6 @@ def get_db_cursor():
 
 
 def get_db_connection():
-	# if 'conn' not in get_db_connection.__dict__:
-	# 	get_db_connection.conn = None
-
-	# if get_db_connection.conn is None:
-	# 	if in_test_mode():
-	# 		logger.info('get_db_connection(): connect to test database')
-	# 		get_db_connection.conn = get_test_db_connection()
-	# 	else:
-	# 		logger.info('get_db_connection(): connect to database: records.db')
-	# 		get_db_connection.conn = sqlite3.connect(os.path.join(get_current_path(), 'records.db'))
-
-		# if 'conn' not in get_db_connection.__dict__:
-	# 	get_db_connection.conn = None
-
 	if 'conn' not in get_db_connection.__dict__:
 		if in_test_mode():
 			logger.info('get_db_connection(): connect to test database')
@@ -155,3 +142,13 @@ def db_record_exists(file):
 		return False
 	else:
 		return True
+
+
+
+def files_modified_earlier_than_days(file, days):
+	"""
+	Test whether the file's last modified datetime is earlier than number of days specified.
+
+	days: the number of days.
+	"""
+	return datetime.now() - datetime.fromtimestamp(os.path.getmtime(file)) > timedelta(days=days)

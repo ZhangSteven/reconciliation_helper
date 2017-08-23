@@ -9,7 +9,7 @@ from os.path import join
 from reconciliation_helper.utility import get_current_path, enable_test_mode
 from reconciliation_helper.record_new import save_result, get_db_connection, \
                                                 get_db_cursor, filter_files, \
-                                                db_record_exists
+                                                db_record_exists, files_modified_earlier_than_days
 
 
 
@@ -33,6 +33,15 @@ class TestRecordsNew(unittest2.TestCase):
             Run after a test finishes
         """
         pass
+
+
+
+    def test_files_modified_earlier_than_days(self):
+        # this file's last modified date is 2016-12-20 9:33am
+        concord_cash_file = join(get_current_path(), 'samples', 'Reconciliation', 'Concord', 'Cash Stt _ 19122016.xls')
+        days = (datetime.now() - datetime(2016,12,20)).days     # num of days between now and 2016-12-19
+        self.assertTrue(files_modified_earlier_than_days(concord_cash_file, days))
+        self.assertFalse(files_modified_earlier_than_days(concord_cash_file, days+1))
 
 
 
@@ -75,9 +84,11 @@ class TestRecordsNew(unittest2.TestCase):
         ffx_cash_file = join(get_current_path(), 'samples', 'Reconciliation', 'FFX', 'Cash Stt _ 21082017.xlsx')
         ffx_holding_file = join(get_current_path(), 'samples', 'Reconciliation', 'FFX', 'Holding _ 21082017.xlsx')
         sample_txt_file = join(get_current_path(), 'samples', 'Reconciliation', 'FFX', 'sample.txt')
+        old_concord_file = join(get_current_path(), 'samples', 'Reconciliation', 'Concord', 'Cash Stt _ 19122016.xls')
+
         files = [concord_holding_file, concord_cash_file, ffx_holding_file, ffx_cash_file, sample_txt_file]
         result_files = filter_files(files)
-        self.assertEqual(len(result_files), 2)
+        self.assertEqual(len(result_files), 2)  # the old file and txt file should be ignored
         self.assertEqual(result_files[0], ffx_holding_file)
         self.assertEqual(result_files[1], ffx_cash_file)
 
