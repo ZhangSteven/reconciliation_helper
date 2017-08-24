@@ -188,4 +188,4 @@ def get_mail_timeout():
 
 def get_db_file():
 	global config
-	return config['database']['db_file']
+	return os.path.join(get_current_path(), config['database']['db_file'])

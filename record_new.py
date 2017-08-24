@@ -151,4 +151,5 @@ def files_modified_earlier_than_days(file, days):
 
 	days: the number of days.
 	"""
+	logger.debug('files_modified_earlier_than_days(): {0}'.format(file.split('\\')[-1]))
 	return datetime.now() - datetime.fromtimestamp(os.path.getmtime(file)) > timedelta(days=days)
