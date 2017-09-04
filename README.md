@@ -46,6 +46,7 @@ Changes:
 
 However, we find that when a file is opened by Excel, even if no modification has been made, its SHA256 hash changes. Therefore it doesn't solve the problem. But the program runs much slower than before, because instead of reading a file's last modified date, it needs to compute the SHA256 hash now. Therefore we recommend do not use this version.
 
+This version has been added to a new branch: SHA-hash-branch
 
 
 ++++++++++++++++++
