@@ -33,22 +33,6 @@ Todo
 
 
 ++++++++++++++++++
-ver 0.33@2017-8-17
-++++++++++++++++++
-DO NOT use this version.
-
-The problem it tries to solve: when someone opens a file in P:\Reconciliation by Excel, even if the file is not modified, its late modified date is changed when the file is opened and won't restore to its original last modified date until it's closed in Excel. Therefore, when the file is opened and last modifed date changed, the reconciliation program thinks the file has been modified and process and upload again. In Geneva side, it sees new versions of upload file and may cause error.
-
-Changes:
-1. Use record_new.py to replace record.py: use SHA256 hash to determine whether a file has been modified since it was processed last time. Previously we used the file's last modified time to determine.
-
-2. A new database sqlite3_records.db is created to store the new data.
-
-However, we find that when a file is opened by Excel, even if no modification has been made, its SHA256 hash changes. Therefore it doesn't solve the problem. But the program runs much slower than before, because instead of reading a file's last modified date, it needs to compute the SHA256 hash now. Therefore we recommend do not use this version.
-
-
-
-++++++++++++++++++
 ver 0.32@2017-8-17
 ++++++++++++++++++
 1. Added Macau balanced fund and guarantee fund nav upload to server.

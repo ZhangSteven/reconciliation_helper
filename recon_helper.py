@@ -17,7 +17,7 @@ from reconciliation_helper.recon_utility import read_jpm_file, \
 from reconciliation_helper.trustee import convert_trustee
 from reconciliation_helper.greenblue import filter_greenblue, convert_CCB_cash, \
 											convert_CCB_position
-from reconciliation_helper.record_new import filter_files, save_result, \
+from reconciliation_helper.record import filter_files, save_result, \
 											get_db_connection
 from reconciliation_helper.sftp import upload
 from reconciliation_helper.mail import send_notification
