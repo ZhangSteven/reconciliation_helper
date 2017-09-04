@@ -44,16 +44,16 @@ if not 'config' in globals():
 
 
 
-# def get_base_directory():
-# 	"""
-# 	The directory where the log file resides.
-# 	"""
-# 	global config
-# 	directory = config['logging']['directory']
-# 	if directory == '':
-# 		directory = get_current_path()
+def get_base_directory():
+	"""
+	The directory where the log file resides.
+	"""
+	global config
+	directory = config['logging']['directory']
+	if directory == '':
+		directory = get_current_path()
 
-# 	return directory
+	return directory
 
 
 
@@ -183,9 +183,3 @@ def get_mail_server():
 def get_mail_timeout():
 	global config
 	return float(config['email']['timeout'])
-
-
-
-def get_db_file():
-	global config
-	return config['database']['db_file']

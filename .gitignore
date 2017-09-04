@@ -6,7 +6,6 @@ logs/
 
 # ignore the database
 records.db
-sqlite3_records.db
 
 # ignore the config file, because development and production environment
 # is different
