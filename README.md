@@ -32,6 +32,14 @@ Todo
 
 
 
+
+++++++++++++++++++
+ver 0.33@2017-10-20
+++++++++++++++++++
+1. Added support for in house fund, bochk package also updated.
+
+
+
 ++++++++++++++++++
 ver 0.32@2017-8-17
 ++++++++++++++++++

@@ -66,7 +66,7 @@ def search_files(base_dir, output_dir):
 			continue
 
 		local_dir = join(base_dir, folder)
-		if local_dir == output_dir:
+		if local_dir == output_dir:	# skip the output dir ("result")
 			continue
 
 		try:
@@ -78,6 +78,7 @@ def search_files(base_dir, output_dir):
 
 		if len(file_list) > 0:
 			files[folder] = file_list
+			# print(folder)
 
 	return files
 
@@ -102,7 +103,8 @@ def convert(files, output_dir):
 		'trustee': convert_trustee,
 		'macau balanced fund': convert_bal,
 		'macau guarantee fund': convert_bal,
-		'star helios': convert_citi
+		'star helios': convert_citi,
+		'in-house fund': convert_bochk
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
