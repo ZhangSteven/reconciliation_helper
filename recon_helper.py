@@ -103,6 +103,7 @@ def convert(files, output_dir):
 		'trustee': convert_trustee,
 		'macau balanced fund': convert_bal,
 		'macau guarantee fund': convert_bal,
+		'macau growth fund': convert_void,
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk
 	}
@@ -190,6 +191,11 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 			pass_list.append(filename)
 
 	return output_list
+
+
+
+def convert_void(file_list, output_dir, pass_list, fail_list):
+	return []
 
 
 
