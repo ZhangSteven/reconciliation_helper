@@ -105,7 +105,8 @@ def convert(files, output_dir):
 		'macau guarantee fund': convert_bal,
 		'macau growth fund': convert_bal,
 		'star helios': convert_citi,
-		'in-house fund': convert_bochk
+		'in-house fund': convert_bochk,
+		'jic international': convert_dummy
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
@@ -122,6 +123,11 @@ def convert(files, output_dir):
 	return result
 
 
+
+def convert_dummy(file_list, output_dir, pass_list, fail_list):
+	return []
+
+	
 
 def convert_jpm(file_list, output_dir, pass_list, fail_list):
 	output_list = []
