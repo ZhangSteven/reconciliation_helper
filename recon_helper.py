@@ -106,7 +106,7 @@ def convert(files, output_dir):
 		'macau growth fund': convert_bal,
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk,
-		'jic international': convert_dummy
+		'jic international': convert_bochk
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
