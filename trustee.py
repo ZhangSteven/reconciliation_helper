@@ -9,7 +9,7 @@ from jpm.open_jpm import get_portfolio_date_as_string
 from bochk.open_bochk import read_cash_bochk, read_holdings_bochk, \
 								write_holding_csv, write_cash_csv, \
 								read_cash_fields, read_cash_bochk
-from datetime import datetime
+from datetime import datetime, timedelta
 from xlrd import open_workbook
 import shutil
 from os.path import isfile, isdir, join
@@ -54,8 +54,8 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 		bochk_date, bochk_mc_csv = handle_bochk_position(bochk_mc_file, 'mc', output_dir)
 		bochk_date, bochk_hk_csv = handle_bochk_position(bochk_hk_file, 'hk', output_dir)
 
-		if bochk_date != jpm_date:
-			logger.error('convert_trustee(): bochk date {0} is not the same as jpm date {1}'.
+		if bochk_date - jpm_date > timedelta(1) or jpm_date - bochk_date > timedelta(1):
+			logger.error('convert_trustee(): bochk date {0} and jpm date {1} is inconsistent'.
 							format(bochk_date, jpm_date))
 			raise InconsistentStatementDate()
 
