@@ -23,7 +23,8 @@ from reconciliation_helper.sftp import upload
 from reconciliation_helper.mail import send_notification
 from jpm import open_jpm
 from bochk import open_bochk
-from DIF import open_dif, open_bal
+# from DIF import open_dif, open_bal
+from dif_revised.geneva import open_dif
 from citi import open_citi
 from webservice_client.nav import upload_nav
 
@@ -99,11 +100,14 @@ def convert(files, output_dir):
 		'ffx': convert_bochk,
 		'greenblue': convert_greenblue,
 		'dif': convert_dif,
+		'macau balanced fund': convert_dif,
+		'macau guarantee fund': convert_dif,
+		'macau growth fund': convert_dif,
 		'special event fund': convert_bochk,
 		'trustee': convert_trustee,
-		'macau balanced fund': convert_bal,
-		'macau guarantee fund': convert_bal,
-		'macau growth fund': convert_bal,
+		# 'macau balanced fund': convert_bal,
+		# 'macau guarantee fund': convert_bal,
+		# 'macau growth fund': convert_bal,
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk,
 		'jic international': convert_bochk
@@ -187,7 +191,7 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 	for filename in file_list:
 		port_values = {}
 		try:
-			output = open_dif.open_dif(filename, port_values, output_dir)
+			output = open_dif(filename, port_values, output_dir, get_filename_prefix(filename, ''))
 			validate_and_upload(port_values)
 			output_list = output_list + output
 		except:
@@ -200,21 +204,39 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 
 
 
-def convert_bal(file_list, output_dir, pass_list, fail_list):
-	output_list = []
-	for filename in file_list:
-		port_values = {}
-		try:
-			output = open_bal.open_bal(filename, port_values, output_dir, get_filename_prefix(filename, ''))
-			validate_and_upload(port_values)
-			output_list = output_list + output
-		except:
-			logger.exception('convert_bal()')
-			fail_list.append(filename)
-		else:
-			pass_list.append(filename)
+# def convert_dif(file_list, output_dir, pass_list, fail_list):
+# 	output_list = []
+# 	for filename in file_list:
+# 		port_values = {}
+# 		try:
+# 			output = open_dif.open_dif(filename, port_values, output_dir)
+# 			validate_and_upload(port_values)
+# 			output_list = output_list + output
+# 		except:
+# 			logger.exception('convert_dif()')
+# 			fail_list.append(filename)
+# 		else:
+# 			pass_list.append(filename)
 
-	return output_list
+# 	return output_list
+
+
+
+# def convert_bal(file_list, output_dir, pass_list, fail_list):
+# 	output_list = []
+# 	for filename in file_list:
+# 		port_values = {}
+# 		try:
+# 			output = open_bal.open_bal(filename, port_values, output_dir, get_filename_prefix(filename, ''))
+# 			validate_and_upload(port_values)
+# 			output_list = output_list + output
+# 		except:
+# 			logger.exception('convert_bal()')
+# 			fail_list.append(filename)
+# 		else:
+# 			pass_list.append(filename)
+
+# 	return output_list
 
 
 
@@ -284,27 +306,43 @@ def show_result(result, upload_result):
 
 
 
+# def validate_and_upload(port_values):
+# 	"""
+# 	Validate the nav, num_units, unit price for the daily funds:
+# 	19437, 30003, 30004
+# 	"""
+# 	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio_id']))
+# 	if abs(port_values['nav']/port_values['number_of_units'] - port_values['unit_price']) < 1.0e-4:
+# 		if upload_nav(port_values['portfolio_id'], 
+# 					port_values['nav'],
+# 					'-'.join([str(port_values['date'].year), str(port_values['date'].month), str(port_values['date'].day)]),
+# 					port_values['number_of_units'],
+# 					port_values['unit_price']):
+
+# 			logger.debug('validate_and_upload(): upload successful.')
+
+# 		else:
+# 			logger.error('validate_and_upload(): upload failed.')
+
+# 	else:
+# 		logger.error('validate_and_upload(): validation failed, nav={0}, units={1}, unit price={2}'.
+# 						format(port_values['nav'], port_values['number_of_units'], port_values['unit_price']))
+
 def validate_and_upload(port_values):
 	"""
 	Validate the nav, num_units, unit price for the daily funds:
 	19437, 30003, 30004
 	"""
-	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio_id']))
-	if abs(port_values['nav']/port_values['number_of_units'] - port_values['unit_price']) < 1.0e-4:
-		if upload_nav(port_values['portfolio_id'], 
-					port_values['nav'],
-					'-'.join([str(port_values['date'].year), str(port_values['date'].month), str(port_values['date'].day)]),
-					port_values['number_of_units'],
-					port_values['unit_price']):
+	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio']))
 
-			logger.debug('validate_and_upload(): upload successful.')
+	if upload_nav(port_values['portfolio'], port_values['nav'],
+				port_values['valuation_date'], port_values['number_of_units'],
+				port_values['unit_price']):
 
-		else:
-			logger.error('validate_and_upload(): upload failed.')
+		logger.debug('validate_and_upload(): upload successful.')
 
 	else:
-		logger.error('validate_and_upload(): validation failed, nav={0}, units={1}, unit price={2}'.
-						format(port_values['nav'], port_values['number_of_units'], port_values['unit_price']))
+		logger.error('validate_and_upload(): upload failed.')
 
 
 
