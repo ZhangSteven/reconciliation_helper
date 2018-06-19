@@ -54,10 +54,13 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 		bochk_date, bochk_mc_csv = handle_bochk_position(bochk_mc_file, 'mc', output_dir)
 		bochk_date, bochk_hk_csv = handle_bochk_position(bochk_hk_file, 'hk', output_dir)
 
-		if bochk_date - jpm_date > timedelta(1) or jpm_date - bochk_date > timedelta(1):
-			logger.error('convert_trustee(): bochk date {0} and jpm date {1} is inconsistent'.
-							format(bochk_date, jpm_date))
-			raise InconsistentStatementDate()
+		# Sometimes, when the statement date is on a Friday, BOCHK will set the
+		# at Friday, but JPM will set the date as next Monday, so there will be
+		# a 3 days difference. Disable the check for the moment.
+		# if bochk_date - jpm_date > timedelta(1) or jpm_date - bochk_date > timedelta(1):
+		# 	logger.error('convert_trustee(): bochk date {0} and jpm date {1} is inconsistent'.
+		# 					format(bochk_date, jpm_date))
+		# 	raise InconsistentStatementDate()
 
 		bochk_cash_csv = handle_bochk_cash(bochk_cash_files, bochk_date, output_dir)
 

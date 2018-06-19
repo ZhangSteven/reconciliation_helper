@@ -105,11 +105,8 @@ def convert(files, output_dir):
 		'macau growth fund': convert_dif,
 		'special event fund': convert_bochk,
 		'trustee': convert_trustee,
-		# 'macau balanced fund': convert_bal,
-		# 'macau guarantee fund': convert_bal,
-		# 'macau growth fund': convert_bal,
 		'star helios': convert_citi,
-		'in-house fund': convert_bochk,
+		'in-house fund': convert_inhouse,
 		'jic international': convert_bochk
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
@@ -157,20 +154,6 @@ def convert_jpm(file_list, output_dir, pass_list, fail_list):
 def convert_bochk(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
-
-		# filename_no_path = filename.split('\\')[-1]
-		# if filename_no_path.startswith('Cash Stt'):
-		# 	read_handler = open_bochk.read_cash_bochk
-		# 	csv_handler = open_bochk.write_cash_csv
-		# elif filename_no_path.startswith('Holding'):
-		# 	read_handler = open_bochk.read_holdings_bochk
-		# 	csv_handler = open_bochk.write_holding_csv
-		# else:
-		# 	logger.warning('convert_bochk(): cannot tell whether it is a cash or holdings file: {0}'.
-		# 					format(filename))
-		# 	fail_list.append(filename)
-		# 	continue
-
 		port_values = {}
 		try:
 			open_bochk.read_file(filename, port_values)
@@ -204,41 +187,6 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 
 
 
-# def convert_dif(file_list, output_dir, pass_list, fail_list):
-# 	output_list = []
-# 	for filename in file_list:
-# 		port_values = {}
-# 		try:
-# 			output = open_dif.open_dif(filename, port_values, output_dir)
-# 			validate_and_upload(port_values)
-# 			output_list = output_list + output
-# 		except:
-# 			logger.exception('convert_dif()')
-# 			fail_list.append(filename)
-# 		else:
-# 			pass_list.append(filename)
-
-# 	return output_list
-
-
-
-# def convert_bal(file_list, output_dir, pass_list, fail_list):
-# 	output_list = []
-# 	for filename in file_list:
-# 		port_values = {}
-# 		try:
-# 			output = open_bal.open_bal(filename, port_values, output_dir, get_filename_prefix(filename, ''))
-# 			validate_and_upload(port_values)
-# 			output_list = output_list + output
-# 		except:
-# 			logger.exception('convert_bal()')
-# 			fail_list.append(filename)
-# 		else:
-# 			pass_list.append(filename)
-
-# 	return output_list
-
-
 
 def convert_citi(file_list, output_dir, pass_list, fail_list):
 	output_list = []
@@ -266,6 +214,12 @@ def convert_greenblue(file_list, output_dir, pass_list, fail_list):
 	
 	return output_list
 
+
+
+def convert_inhouse(file_list, output_dir, pass_list, fail_list):
+	"""
+	
+	"""
 
 
 def copy_files(file_list, dstn_dir):
