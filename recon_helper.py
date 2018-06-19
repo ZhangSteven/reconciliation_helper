@@ -106,7 +106,7 @@ def convert(files, output_dir):
 		'special event fund': convert_bochk,
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
-		'in-house fund': convert_inhouse,
+		'in-house fund': convert_bochk,
 		'jic international': convert_bochk
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
@@ -218,8 +218,10 @@ def convert_greenblue(file_list, output_dir, pass_list, fail_list):
 
 def convert_inhouse(file_list, output_dir, pass_list, fail_list):
 	"""
-	
+	For in house fund, consisting both BOCHK and other bank files.
 	"""
+	return []
+
 
 
 def copy_files(file_list, dstn_dir):
