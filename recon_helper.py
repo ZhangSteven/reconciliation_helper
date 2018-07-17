@@ -114,12 +114,14 @@ def convert(files, output_dir):
 	for sub_folder in files:
 		try:
 			handler = func_map[sub_folder.lower()]
+
+			output = handler(filter_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
+			result['output'] = result['output'] + output
+
 		except KeyError:
-			logger.error('convert(): no handler found for sub folder: {0}'.format(sub_folder))
-			raise HandlerNotFound()
-		
-		output = handler(filter_files(files[sub_folder]), output_dir, result['pass'], result['fail'])
-		result['output'] = result['output'] + output
+			# logger.error('convert(): no handler found for sub folder: {0}'.format(sub_folder))
+			# raise HandlerNotFound()
+			logger.warning('convert(): no handler found for sub folder: {0}'.format(sub_folder))
 
 	return result
 
