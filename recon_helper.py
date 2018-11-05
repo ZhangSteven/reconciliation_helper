@@ -23,6 +23,7 @@ from reconciliation_helper.sftp import upload
 from reconciliation_helper.mail import send_notification
 from jpm import open_jpm
 from bochk import open_bochk
+from IB import ib, henghua
 # from DIF import open_dif, open_bal
 from dif_revised.geneva import open_dif
 from citi import open_citi
@@ -107,7 +108,9 @@ def convert(files, output_dir):
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk,
-		'jic international': convert_bochk
+		'jic international': convert_bochk,
+		'ib': convert_ib,
+		'hngh': convert_hngh
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
@@ -130,7 +133,37 @@ def convert(files, output_dir):
 def convert_dummy(file_list, output_dir, pass_list, fail_list):
 	return []
 
-	
+
+
+def convert_ib(file_list, output_dir, pass_list, fail_list):
+	output_list = []
+	for filename in file_list:
+		try:
+			output_list.append(ib.processCashPositionFile(filename, output_dir))
+		except:
+			logger.exception('convert_ib()')
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
+
+def convert_hngh(file_list, output_dir, pass_list, fail_list):
+	output_list = []
+	for filename in file_list:
+		try:
+			output_list.append(henghua.processCashPositionFile(filename, output_dir))
+		except:
+			logger.exception('convert_hngh()')
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
 
 def convert_jpm(file_list, output_dir, pass_list, fail_list):
 	output_list = []
