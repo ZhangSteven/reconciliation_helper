@@ -110,7 +110,7 @@ def convert(files, output_dir):
 		'in-house fund': convert_bochk,
 		'jic international': convert_bochk,
 		'ib': convert_ib,
-		'hngh': convert_hngh
+		'hgnh': convert_hngh
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
