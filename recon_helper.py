@@ -23,7 +23,7 @@ from reconciliation_helper.sftp import upload
 from reconciliation_helper.mail import send_notification
 from jpm import open_jpm
 from bochk import open_bochk
-from IB import ib, henghua
+from IB import ib, henghua, guangfa
 # from DIF import open_dif, open_bal
 from dif_revised.geneva import open_dif
 from citi import open_citi
@@ -110,7 +110,8 @@ def convert(files, output_dir):
 		'in-house fund': convert_bochk,
 		'jic international': convert_bochk,
 		'ib': convert_ib,
-		'hgnh': convert_hngh
+		'hgnh': convert_hgnh,
+		'gf': convert_guangfa
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
@@ -135,33 +136,88 @@ def convert_dummy(file_list, output_dir, pass_list, fail_list):
 
 
 
+# def convert_ib(file_list, output_dir, pass_list, fail_list):
+# 	output_list = []
+# 	for filename in filter(ib.isCashOrPositionFile, file_list):
+# 		try:
+# 			output_list.append(ib.processCashPositionFile(filename, output_dir))
+# 		except:
+# 			logger.exception('convert_ib()')
+# 			fail_list.append(filename)
+# 		else:
+# 			pass_list.append(filename)
+
+# 	return output_list
+
+
+
+# def convert_hngh(file_list, output_dir, pass_list, fail_list):
+# 	output_list = []
+# 	for filename in filter(henghua.isCashOrPositionFile, file_list):
+# 		try:
+# 			output_list.append(henghua.processCashPositionFile(filename, output_dir))
+# 		except:
+# 			logger.exception('convert_hngh()')
+# 			fail_list.append(filename)
+# 		else:
+# 			pass_list.append(filename)
+
+# 	return output_list
+
+
+
+# def convert_guangfa(file_list, output_dir, pass_list, fail_list):
+# 	output_list = []
+# 	for filename in filter(guangfa.isCashOrPositionFile, file_list):
+# 		try:
+# 			output_list.append(guangfa.processCashPositionFile(filename, output_dir))
+# 		except:
+# 			logger.exception('convert_guangfa()')
+# 			fail_list.append(filename)
+# 		else:
+# 			pass_list.append(filename)
+
+# 	return output_list
+
+
+
+def convert_40006(file_list, output_dir, pass_list, fail_list,
+					cashOrPosition, fileProcessor, msg):
+	output_list = []
+	for filename in filter(cashOrPosition, file_list):
+		try:
+			output_list.append(fileProcessor(filename, output_dir))
+		except:
+			logger.exception(msg)
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
+
 def convert_ib(file_list, output_dir, pass_list, fail_list):
-	output_list = []
-	for filename in file_list:
-		try:
-			output_list.append(ib.processCashPositionFile(filename, output_dir))
-		except:
-			logger.exception('convert_ib()')
-			fail_list.append(filename)
-		else:
-			pass_list.append(filename)
-
-	return output_list
+	return convert_40006(file_list, output_dir, pass_list, fail_list \
+						 , ib.isCashOrPositionFile \
+						 , ib.processCashPositionFile \
+						 , 'convert_ib()')
 
 
 
-def convert_hngh(file_list, output_dir, pass_list, fail_list):
-	output_list = []
-	for filename in file_list:
-		try:
-			output_list.append(henghua.processCashPositionFile(filename, output_dir))
-		except:
-			logger.exception('convert_hngh()')
-			fail_list.append(filename)
-		else:
-			pass_list.append(filename)
+def convert_hgnh(file_list, output_dir, pass_list, fail_list):
+	return convert_40006(file_list, output_dir, pass_list, fail_list \
+						 , henghua.isCashOrPositionFile \
+						 , henghua.processCashPositionFile \
+						 , 'convert_hgnh()')
 
-	return output_list
+
+
+def convert_guangfa(file_list, output_dir, pass_list, fail_list):
+	return convert_40006(file_list, output_dir, pass_list, fail_list \
+						 , guangfa.isCashOrPositionFile \
+						 , guangfa.processCashPositionFile \
+						 , 'convert_guangfa()')
 
 
 
@@ -280,13 +336,15 @@ def show_result(result, upload_result):
 	print('')
 
 	for file in result['pass']:
-		print('pass: {0}'.format(file))
+		# print('pass: {0}'.format(file))
+		print('pass: {0}'.format(file.replace(u'\xa0', u' ')))
 
 	print('')
 	for file in result['fail']:
-		print('fail: {0}'.format(file))
+		# print('fail: {0}'.format(file))
+		print('fail: {0}'.format(file.replace(u'\xa0', u' ')))
 
-	print('output files: {0}'.format(len(result['output'])))
+	print('\n\noutput files: {0}'.format(len(result['output'])))
 	for file in result['output']:
 		print(file)
 

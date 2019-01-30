@@ -105,7 +105,7 @@ def has_valid_extension(file):
 	If the file extension is xls or xlsx or csv, that extension is valid.
 	"""
 	filename = file.split('\\')[-1]
-	if filename.split('.')[-1] in ['xls', 'xlsx', 'csv']:
+	if filename.split('.')[-1] in ['xls', 'xlsx', 'csv', 'txt']:
 		return True
 
 	return False
