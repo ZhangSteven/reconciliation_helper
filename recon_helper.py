@@ -27,6 +27,7 @@ from IB import ib, henghua, guangfa
 # from DIF import open_dif, open_bal
 from dif_revised.geneva import open_dif
 from citi import open_citi
+from hsbc_repo import hsbc
 from webservice_client.nav import upload_nav
 
 import logging
@@ -108,7 +109,7 @@ def convert(files, output_dir):
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk,
-		'jic international': convert_bochk,
+		'jic international': convert_jic,
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'gf': convert_guangfa
@@ -278,7 +279,6 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 
 
 
-
 def convert_citi(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
@@ -307,11 +307,55 @@ def convert_greenblue(file_list, output_dir, pass_list, fail_list):
 
 
 
+def convert_jic(file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_jic(): {0} files'.format(len(file_list)))
+
+	def is_hsbc_repo(filename):
+		if filename_from_path(filename).split('.')[0].lower().startswith('repo exposure trades and collateral position'):
+			return True
+		else:
+			return False
+
+
+	output_list = []
+	for filename in file_list:
+		try:
+			if is_hsbc_repo(filename):
+				output_list.append(hsbc.toCsv('40002', filename, output_dir, get_filename_prefix(filename, 'hsbc_repo')))
+			else:
+				port_values = {}
+				open_bochk.read_file(filename, port_values)
+				output_list.append(open_bochk.write_cash_or_holding_csv(port_values, output_dir, get_filename_prefix(filename, 'bochk')))
+
+		except:
+			logger.exception('convert_jic(): {0}'.format(filename))
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+
+	return output_list
+
+
+
 def convert_inhouse(file_list, output_dir, pass_list, fail_list):
 	"""
 	For in house fund, consisting both BOCHK and other bank files.
 	"""
 	return []
+
+
+
+def filename_from_path(filepath):
+	"""
+	[String] filepath => [String] filename
+
+	filepath: a string representing the full path of a file, like 
+		"C:\\temp\\result.xlsx"
+
+	filename: file name without the path, like "result.xlsx"
+	"""
+	return filepath.split('\\')[-1]
 
 
 
