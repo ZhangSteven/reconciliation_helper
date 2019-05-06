@@ -8,6 +8,7 @@ from datetime import datetime
 from os import listdir
 from os.path import isfile, isdir, join
 from shutil import copy2
+from functools import partial
 from xlrd import open_workbook
 from reconciliation_helper.utility import get_current_path, \
 											get_output_directory, \
@@ -109,7 +110,8 @@ def convert(files, output_dir):
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk,
-		'jic international': convert_jic,
+		'jic international': convert_bochk,
+		'jic-repo': partial(convert_repo, '40002'),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'gf': convert_guangfa
@@ -307,28 +309,27 @@ def convert_greenblue(file_list, output_dir, pass_list, fail_list):
 
 
 
-def convert_jic(file_list, output_dir, pass_list, fail_list):
-	logger.debug('convert_jic(): {0} files'.format(len(file_list)))
+def convert_repo(portfolio, file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_repo(): {0} files'.format(len(file_list)))
 
 	def is_hsbc_repo(filename):
-		if filename_from_path(filename).split('.')[0].lower().startswith('repo exposure trades and collateral position'):
-			return True
-		else:
-			return False
+		# if filename_from_path(filename).split('.')[0].lower().startswith('repo exposure trades and collateral position'):
+		# 	return True
+		# else:
+		# 	return False
+
+		# so far there is only type of REPO report (HSBC)
+		return True
 
 
 	output_list = []
 	for filename in file_list:
 		try:
 			if is_hsbc_repo(filename):
-				output_list.append(hsbc.toCsv('40002', filename, output_dir, get_filename_prefix(filename, 'hsbc_repo')))
-			else:
-				port_values = {}
-				open_bochk.read_file(filename, port_values)
-				output_list.append(open_bochk.write_cash_or_holding_csv(port_values, output_dir, get_filename_prefix(filename, 'bochk')))
+				output_list.append(hsbc.toCsv(portfolio, filename, output_dir, get_filename_prefix(filename, 'hsbc_repo')))
 
 		except:
-			logger.exception('convert_jic(): {0}'.format(filename))
+			logger.exception('convert_repo(): {0}'.format(filename))
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
