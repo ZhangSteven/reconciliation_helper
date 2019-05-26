@@ -29,6 +29,7 @@ from IB import ib, henghua, guangfa
 from dif_revised.geneva import open_dif
 from citi import open_citi
 from hsbc_repo import hsbc
+from cmbhk import cmb
 from webservice_client.nav import upload_nav
 
 import logging
@@ -112,6 +113,7 @@ def convert(files, output_dir):
 		'in-house fund': convert_bochk,
 		'jic international': convert_bochk,
 		'jic-repo': partial(convert_repo, '40002'),
+		'global fixed income spc': partial(convert_cmbhk, '40017'),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'gf': convert_guangfa
@@ -334,6 +336,24 @@ def convert_repo(portfolio, file_list, output_dir, pass_list, fail_list):
 		else:
 			pass_list.append(filename)
 
+
+	return output_list
+
+
+
+def convert_cmbhk(portfolio, file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_cmbhk(): {0} files'.format(len(file_list)))
+
+	output_list = []
+	for filename in file_list:
+		try:
+			output_list.append(cmb.toCsv(portfolio, filename, output_dir, get_filename_prefix(filename, 'cmbhk')))
+
+		except:
+			logger.exception('convert_cmbhk(): {0}'.format(filename))
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
 
 	return output_list
 
