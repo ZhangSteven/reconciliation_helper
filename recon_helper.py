@@ -113,7 +113,7 @@ def convert(files, output_dir):
 		'in-house fund': convert_bochk,
 		'jic international': convert_bochk,
 		'jic-repo': partial(convert_repo, '40002'),
-		'global fixed income spc': partial(convert_cmbhk, '40017'),
+		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'gf': convert_guangfa
