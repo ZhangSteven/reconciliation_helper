@@ -23,6 +23,7 @@ from reconciliation_helper.record import filter_files, save_result, \
 from reconciliation_helper.sftp import upload
 from reconciliation_helper.mail import send_notification
 from jpm import open_jpm
+from jpm_revised import jpm2
 from bochk import open_bochk
 from IB import ib, henghua, guangfa
 # from DIF import open_dif, open_bal
@@ -100,6 +101,7 @@ def convert(files, output_dir):
 	logger.debug('convert(): output to: {0}'.format(output_dir))
 	func_map = {
 		'listco equity': convert_jpm,
+		'test listco equity': convert_jpm2,
 		'concord': convert_bochk,
 		'ffx': convert_bochk,
 		'greenblue': convert_greenblue,
@@ -239,6 +241,22 @@ def convert_jpm(file_list, output_dir, pass_list, fail_list):
 			output_list.extend(read_jpm_file(filename, port_values, output_dir))
 		except:
 			logger.exception('convert_jpm()')
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
+
+def convert_jpm2(file_list, output_dir, pass_list, fail_list):
+	output_list = []
+	for filename in file_list:
+		try:
+			output_list = output_list + \
+							jpm2.toCsv(filename, output_dir, get_filename_prefix(filename, 'jpm'))
+		except:
+			logger.exception('convert_jpm2()')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
