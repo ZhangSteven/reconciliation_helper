@@ -118,6 +118,7 @@ def convert(files, output_dir):
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
+		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
 		'gf': convert_guangfa
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
@@ -365,7 +366,7 @@ def convert_cmbhk(portfolio, file_list, output_dir, pass_list, fail_list):
 	output_list = []
 	for filename in file_list:
 		try:
-			output_list.append(cmb.toCsv(portfolio, filename, output_dir, get_filename_prefix(filename, 'cmbhk')))
+			output_list.append(cmb.toCsv(portfolio, filename, output_dir, get_filename_prefix(filename, '')))
 
 		except:
 			logger.exception('convert_cmbhk(): {0}'.format(filename))
