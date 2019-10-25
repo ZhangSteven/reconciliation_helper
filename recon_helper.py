@@ -31,6 +31,7 @@ from dif_revised.geneva import open_dif
 from citi import open_citi
 from hsbc_repo import hsbc
 from cmbhk import cmb
+from nomura.main import outputCsv as nomura_outputCsv
 from webservice_client.nav import upload_nav
 
 import logging
@@ -116,6 +117,7 @@ def convert(files, output_dir):
 		'jic international': convert_bochk,
 		'jic-repo': partial(convert_repo, '40002'),
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
+		'global fixed income spc (pb)': convert_nomura,
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
@@ -370,6 +372,29 @@ def convert_cmbhk(portfolio, file_list, output_dir, pass_list, fail_list):
 
 		except:
 			logger.exception('convert_cmbhk(): {0}'.format(filename))
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
+
+def convert_nomura(file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_nomura(): start')
+	output_list = []
+	fnWithoutPath = lambda fn: \
+		fn.split('\\')[-1]
+
+	for filename in filter( lambda fn: fn[-5:] == '.xlsx' and \
+							(fnWithoutPath(fn).startswith('Cash Stt') or \
+								fnWithoutPath(fn).startswith('Holding'))\
+						  , file_list):
+		logger.debug('convert_nomura(): processing {0}'.format(filename))
+		try:
+			output_list.append(nomura_outputCsv(filename, output_dir))
+		except:
+			logger.exception('convert_nomura(): ')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
