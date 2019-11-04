@@ -32,6 +32,7 @@ from citi import open_citi
 from hsbc_repo import hsbc
 from cmbhk import cmb
 from nomura.main import outputCsv as nomura_outputCsv
+from cmbc.main import outputCsv as cmbc_outputCsv
 from webservice_client.nav import upload_nav
 
 import logging
@@ -118,6 +119,7 @@ def convert(files, output_dir):
 		'jic-repo': partial(convert_repo, '40002'),
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
 		'global fixed income spc (pb)': convert_nomura,
+		'first seafront fund': convert_cmbc,
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
@@ -395,6 +397,24 @@ def convert_nomura(file_list, output_dir, pass_list, fail_list):
 			output_list.append(nomura_outputCsv(filename, output_dir))
 		except:
 			logger.exception('convert_nomura(): ')
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return output_list
+
+
+
+def convert_cmbc(file_list, output_dir, pass_list, fail_list):
+	logger.debug('convert_cmbc(): start')
+	output_list = []
+
+	for filename in file_list:
+		logger.debug('convert_cmbc(): processing {0}'.format(filename))
+		try:
+			output_list.append(cmbc_outputCsv(filename, output_dir))
+		except:
+			logger.exception('convert_cmbc(): ')
 			fail_list.append(filename)
 		else:
 			pass_list.append(filename)
