@@ -8,7 +8,7 @@ from datetime import datetime
 from os import listdir
 from os.path import isfile, isdir, join
 from shutil import copy2
-from functools import partial
+from functools import partial, reduce
 from xlrd import open_workbook
 from reconciliation_helper.utility import get_current_path, \
 											get_output_directory, \
@@ -33,6 +33,7 @@ from hsbc_repo import hsbc
 from cmbhk import cmb
 from nomura.main import outputCsv as nomura_outputCsv
 from cmbc.main import outputCsv as cmbc_outputCsv
+from bochk_revised.main import outputCsv as bochk_outputCsv
 from webservice_client.nav import upload_nav
 
 import logging
@@ -114,12 +115,14 @@ def convert(files, output_dir):
 		'special event fund': convert_bochk,
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
-		'in-house fund': convert_bochk,
+		'in-house fund': partial( converter, bochk_outputCsv
+								, filter_func=in_house_filter),
 		'jic international': convert_bochk,
 		'jic-repo': partial(convert_repo, '40002'),
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
-		'global fixed income spc (pb)': convert_nomura,
-		'first seafront fund': convert_cmbc,
+		'global fixed income spc (pb)': partial( converter, nomura_outputCsv
+											   , filter_func=global_fixed_income_spc_filter),
+		'first seafront fund': partial(converter, cmbc_outputCsv),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
@@ -148,48 +151,41 @@ def convert_dummy(file_list, output_dir, pass_list, fail_list):
 
 
 
-# def convert_ib(file_list, output_dir, pass_list, fail_list):
-# 	output_list = []
-# 	for filename in filter(ib.isCashOrPositionFile, file_list):
-# 		try:
-# 			output_list.append(ib.processCashPositionFile(filename, output_dir))
-# 		except:
-# 			logger.exception('convert_ib()')
-# 			fail_list.append(filename)
-# 		else:
-# 			pass_list.append(filename)
+def converter( convert_func, file_list, output_dir, pass_list, fail_list
+			 , filter_func = lambda x: True):
+	"""
+	[Function] convert_func ([String] file, [String] output_dir -> output),
+	[Iterable] file_list (input file list),
+	[String] output_dir,
+	[List] pass_list,
+	[List] fail_list,
+	[Function] filter_func ([String] file -> [Bool]) 
 
-# 	return output_list
+	=> 
 
+	[List] output_list (output csv files)
 
-
-# def convert_hngh(file_list, output_dir, pass_list, fail_list):
-# 	output_list = []
-# 	for filename in filter(henghua.isCashOrPositionFile, file_list):
-# 		try:
-# 			output_list.append(henghua.processCashPositionFile(filename, output_dir))
-# 		except:
-# 			logger.exception('convert_hngh()')
-# 			fail_list.append(filename)
-# 		else:
-# 			pass_list.append(filename)
-
-# 	return output_list
+	Side effect: update pass_list and fail_list
+	"""
+	add_to_list = lambda L, el: \
+		L + el if isinstance(el, list) else \
+		L + list(el) if isinstance(el, tuple) else \
+		L + [el]
 
 
+	def build_output(output_list, file):
+		try:
+			logger.debug('converter(): processing {0}'.format(file))
+			result = convert_func(file, output_dir)
+			pass_list.append(file)
+			return add_to_list(output_list, result)
+		except:
+			logger.exception('converter(): {0}'.format(file))
+			fail_list.append(file)
+			return output_list
 
-# def convert_guangfa(file_list, output_dir, pass_list, fail_list):
-# 	output_list = []
-# 	for filename in filter(guangfa.isCashOrPositionFile, file_list):
-# 		try:
-# 			output_list.append(guangfa.processCashPositionFile(filename, output_dir))
-# 		except:
-# 			logger.exception('convert_guangfa()')
-# 			fail_list.append(filename)
-# 		else:
-# 			pass_list.append(filename)
-
-# 	return output_list
+	
+	return reduce(build_output, filter(filter_func, file_list), [])
 
 
 
@@ -382,52 +378,22 @@ def convert_cmbhk(portfolio, file_list, output_dir, pass_list, fail_list):
 
 
 
-def convert_nomura(file_list, output_dir, pass_list, fail_list):
-	logger.debug('convert_nomura(): start')
-	output_list = []
-	fnWithoutPath = lambda fn: \
-		fn.split('\\')[-1]
-
-	for filename in filter( lambda fn: fn[-5:] == '.xlsx' and \
-							(fnWithoutPath(fn).startswith('Cash Stt') or \
-								fnWithoutPath(fn).startswith('Holding'))\
-						  , file_list):
-		logger.debug('convert_nomura(): processing {0}'.format(filename))
-		try:
-			output_list.append(nomura_outputCsv(filename, output_dir))
-		except:
-			logger.exception('convert_nomura(): ')
-			fail_list.append(filename)
-		else:
-			pass_list.append(filename)
-
-	return output_list
+filename_wo_path = lambda fn: \
+	fn.split('\\')[-1]
 
 
 
-def convert_cmbc(file_list, output_dir, pass_list, fail_list):
-	logger.debug('convert_cmbc(): start')
-	output_list = []
-
-	for filename in file_list:
-		logger.debug('convert_cmbc(): processing {0}'.format(filename))
-		try:
-			output_list.append(cmbc_outputCsv(filename, output_dir))
-		except:
-			logger.exception('convert_cmbc(): ')
-			fail_list.append(filename)
-		else:
-			pass_list.append(filename)
-
-	return output_list
+global_fixed_income_spc_filter = lambda file: \
+	(lambda fn: \
+		fn[-5:] == '.xlsx' and (fn.startswith('cash stt') or fn.startswith('holding'))
+	)(filename_wo_path(file).lower())
+	
 
 
-
-def convert_inhouse(file_list, output_dir, pass_list, fail_list):
-	"""
-	For in house fund, consisting both BOCHK and other bank files.
-	"""
-	return []
+in_house_filter = lambda file: \
+	(lambda fn: \
+		not 'minsheng' in fn and (fn.startswith('cash stt') or fn.startswith('holding'))
+	)(filename_wo_path(file).lower())
 
 
 
