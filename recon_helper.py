@@ -105,14 +105,14 @@ def convert(files, output_dir):
 	func_map = {
 		'listco equity': convert_jpm,
 		'test listco equity': convert_jpm2,
-		'concord': convert_bochk,
+		# 'concord': convert_bochk,
 		'ffx': partial(converter, bochk_outputCsv),
 		'greenblue': convert_greenblue,
 		'dif': convert_dif,
 		'macau balanced fund': convert_dif,
 		'macau guarantee fund': convert_dif,
 		'macau growth fund': convert_dif,
-		'special event fund': convert_bochk,
+		'special event fund': partial(converter, bochk_outputCsv),
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
 		'in-house fund': partial( converter, bochk_outputCsv
