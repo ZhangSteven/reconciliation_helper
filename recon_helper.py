@@ -386,7 +386,7 @@ filename_wo_path = lambda fn: \
 
 first_seafront_fund_filter = lambda file: \
 	(lambda fn: \
-		fn[-5:] == '.xlsx' and (fn.startswith('sec_pos') or fn.startswith('cash_pos'))
+		fn[-4:] in ['.xls', 'xlsx'] and (fn.startswith('sec_pos') or fn.startswith('cash_pos'))
 	)(filename_wo_path(file).lower())
 
 
