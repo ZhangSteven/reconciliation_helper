@@ -9,6 +9,8 @@ from os import listdir
 from os.path import isfile, isdir, join
 from shutil import copy2
 from functools import partial, reduce
+from itertools import filterfalse
+from toolz.functoolz import compose
 from xlrd import open_workbook
 from reconciliation_helper.utility import get_current_path, \
 											get_output_directory, \
@@ -34,6 +36,7 @@ from cmbhk import cmb
 from nomura.main import outputCsv as nomura_outputCsv
 from cmbc.main import outputCsv as cmbc_outputCsv
 from bochk_revised.main import outputCsv as bochk_outputCsv
+from bochk_revised2.main import doOutput as bochk_outputCsvNew
 from webservice_client.nav import upload_nav
 
 import logging
@@ -115,9 +118,8 @@ def convert(files, output_dir):
 		'special event fund': partial(converter, bochk_outputCsv),
 		'trustee': convert_trustee,
 		'star helios': convert_citi,
-		'in-house fund': partial( converter, bochk_outputCsv
-								, filter_func=in_house_filter),
-		'jic international': convert_bochk,
+		'in-house fund': convert_bochk_new,
+		'jic international': convert_bochk_new,
 		'jic-repo': partial(convert_repo, '40002'),
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
 		'global fixed income spc (pb)': partial( converter, nomura_outputCsv
@@ -282,6 +284,23 @@ def convert_bochk(file_list, output_dir, pass_list, fail_list):
 			pass_list.append(filename)
 
 	return output_list
+
+
+
+def convert_bochk_new(file_list, output_dir, pass_list, fail_list):
+	"""
+	For the new BOCHK cash formats, holding format will use the same logic
+	to process.
+	"""
+	successfulFiles, outputList = compose(
+		lambda t: (list(t[0]), list(t[1]))
+	  , bochk_outputCsvNew
+	)(output_dir, file_list)
+
+	pass_list.extend(successfulFiles)
+	fail_list.extend(set(file_list) - set(successfulFiles))
+
+	return outputList
 
 
 
