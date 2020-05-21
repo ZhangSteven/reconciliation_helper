@@ -22,7 +22,7 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 ## Trouble Shooting
 
-Error: xlrd.biffh.XLRDError. This usually occurs when the program fails to load an Excel file using the xlrd package. Usually it is the JP Morgan broker statement. If you use Excel to open that file manually, you'll see a message saying "the file format and extension don't match." To solve the problem, save the file as "Excel workbook" (.xlsx) format. 
+**Error: xlrd.biffh.XLRDError**. This usually occurs when the program fails to load an Excel file using the xlrd package. Usually it is the JP Morgan broker statement. If you use Excel to open that file manually, you'll see a message saying "the file format and extension don't match." To solve the problem, save the file as "Excel workbook" (.xlsx) format. 
 
 See error message and the Excel open error as below:
 
