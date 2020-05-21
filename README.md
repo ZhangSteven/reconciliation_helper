@@ -14,23 +14,21 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 
 
-
 ## Known Issues
 
 1. When use git clone or pull or merge in a new location, the last modified time of the newly added files will be the sync time, instead of the file's original last modified time. This can cause some tests to fail.
 
 
 
+## Trouble Shooting
 
-## Todo
+Error: xlrd.biffh.XLRDError. This usually occurs when the program fails to load an Excel file using the xlrd package. Usually it is the JP Morgan broker statement. If you use Excel to open that file manually, you'll see a message saying "the file format and extension don't match." To solve the problem, save the file as "Excel workbook" (.xlsx) format. 
 
-1. Add force process options, so that we can force process certain files:
+See error message and the Excel open error as below:
 
-1.1 files in a certain folder.
-1.2 files whose last modified date is within X days compared that in the record.
-	c. a particular file
+![image of program error](images/readfile_error.png)
 
-
+![image of excel error](images/JPM file error.png)
 
 
 
@@ -50,8 +48,11 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 ## ver 0.31@2017-8-16
 
 1. Fixed logging issue by using new stand way of logging: logging.getLogger(__name__).
+
 2. Now log to 2 files, one for everything, another just for errors.
+
 3. Added DIF fund nav/units/unit_price upload to server, after these numbers are validated.
+
 4. Valiation criteria: calculated unit_price and the unit price read from the excel file, should have a different < 0.0001 (i.e., the first 4 decimal points are identical).
 
 
@@ -96,29 +97,23 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 
 ## ver 0.25
-
 1. convert_trustee() is added to enable automatic conversion, plus fix some minor bugs in convert_trustee(), like circular import and when the input file list is empty, it still do some processing.
 
 
 
 
 ## ver 0.24
-
 1. trustee.py is added to include convert_trustee() function. 
 
 
 
-
 ## ver 0.23
-
 1. mail.py is added to mail conversion and upload results to a list of recipients.
 
 
 
 ## ver 0.22
-
 1. sftp.py is added to upload the csv files to sftp.clamc.com.hk.
-
 
 
 
@@ -130,12 +125,11 @@ Automate the daily workflow to prepare and upload the reconciliation files:
 
 
 ## ver 0.2
-
 1. A sqlite3 database is used to record the file process status, so that only new files or updated files are processed. The database contains two tables:
 	
-1.1 lastest file process status (file, last modified time, pass or fail)
+	1.1 lastest file process status (file, last modified time, pass or fail)
 
-1.2 all process results (id, file, last modified time, process time, pass or fail)
+	1.2 all process results (id, file, last modified time, process time, pass or fail)
 
 
 
