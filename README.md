@@ -28,7 +28,7 @@ See error message and the Excel open error as below:
 
 ![image of program error](images/readfile_error.png)
 
-![image of excel error](images/JPM file error.png)
+![image of excel error](images/JPM_file_error.png)
 
 
 

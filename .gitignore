@@ -29,5 +29,3 @@ samples/winscp_log/
 winscp_script/
 winscp_log/
 
-# the downloaded files from test ftp
-*.png
