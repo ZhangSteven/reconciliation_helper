@@ -125,7 +125,7 @@ def convert(files, output_dir):
 		'global fixed income spc (pb)': partial( converter, nomura_outputCsv
 											   , filter_func=global_fixed_income_spc_filter),
 		'first seafront fund': partial( converter, cmbc_outputCsv
-									  , filter_func=first_seafront_fund_filter),
+									  , filter_func=isFirstSeaFrontCashOrPosition),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
@@ -403,11 +403,17 @@ filename_wo_path = lambda fn: \
 
 
 
-first_seafront_fund_filter = lambda file: \
-	(lambda fn: \
-		fn[-4:] in ['.xls', 'xlsx'] and \
-		(fn.split('.')[0].endswith('cash_pos') or fn.startswith('security holding'))
-	)(filename_wo_path(file).lower())
+"""
+	[String] file name (full path) => [Bool] is it a cash or position statement
+"""
+isFirstSeaFrontCashOrPosition = compose(
+	lambda L: len(L) > 1 and \
+				(L[0].endswith('cash_pos') or L[0].endswith('sec_holding')) and \
+				L[1][-4:] in ['.xls', 'xlsx']
+  , lambda s: s.split('.')
+  , lambda s: s.lower()
+  , filename_wo_path
+)
 
 
 
