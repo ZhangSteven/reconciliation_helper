@@ -40,9 +40,7 @@ def convert_trustee(file_list, output_dir, pass_list, fail_list):
 		elif filename_no_path.lower().startswith('jp morgan broker statement'):
 			jpm_file = filename
 		
-		elif filename_no_path.lower().startswith('boc broker statement') \
-			and (filename_no_path.lower().endswith('(class a-mc).xls') or \
-				filename_no_path.lower().endswith('(a-mc).xls')):
+		elif filename_no_path.lower().startswith('boc broker statement') and 'a-mc)' in filename_no_path.lower():
 			bochk_mc_file = filename
 		
 		elif filename_no_path.lower().startswith('boc broker statement'):
