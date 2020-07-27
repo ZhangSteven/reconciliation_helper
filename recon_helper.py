@@ -124,6 +124,8 @@ def convert(files, output_dir):
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
 		'global fixed income spc (pb)': partial( converter, nomura_outputCsv
 											   , filter_func=global_fixed_income_spc_filter),
+		'rainmaker solutions': partial( converter, nomura_outputCsv
+									  , filter_func=global_fixed_income_spc_filter),
 		'first seafront fund': partial( converter, cmbc_outputCsv
 									  , filter_func=isFirstSeaFrontCashOrPosition),
 		'ib': convert_ib,
