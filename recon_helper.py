@@ -128,6 +128,8 @@ def convert(files, output_dir):
 									  , filter_func=global_fixed_income_spc_filter),
 		'first seafront fund': partial( converter, cmbc_outputCsv
 									  , filter_func=isFirstSeaFrontCashOrPosition),
+		'fortune capricorn': partial( converter, cmbc_outputCsv
+									, filter_func=isFirstSeaFrontCashOrPosition),
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
