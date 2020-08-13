@@ -343,14 +343,14 @@ def convert_citi(file_list, output_dir, pass_list, fail_list):
 
 
 
-def convert_greenblue(file_list, output_dir, pass_list, fail_list):
-	logger.debug('convert_greenblue(): {0} files'.format(len(file_list)))
-	bochk_files, CCB_cash_files, CCB_position_files = filter_greenblue(file_list)
-	output_list = convert_bochk(bochk_files, output_dir, pass_list, fail_list)
-	output_list.extend(convert_CCB_cash(CCB_cash_files, output_dir, pass_list, fail_list))
-	output_list.extend(convert_CCB_position(CCB_position_files, output_dir, pass_list, fail_list))
+# def convert_greenblue(file_list, output_dir, pass_list, fail_list):
+# 	logger.debug('convert_greenblue(): {0} files'.format(len(file_list)))
+# 	bochk_files, CCB_cash_files, CCB_position_files = filter_greenblue(file_list)
+# 	output_list = convert_bochk(bochk_files, output_dir, pass_list, fail_list)
+# 	output_list.extend(convert_CCB_cash(CCB_cash_files, output_dir, pass_list, fail_list))
+# 	output_list.extend(convert_CCB_position(CCB_position_files, output_dir, pass_list, fail_list))
 	
-	return output_list
+# 	return output_list
 
 
 
