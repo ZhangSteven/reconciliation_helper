@@ -110,7 +110,7 @@ def convert(files, output_dir):
 		'test listco equity': convert_jpm2,
 		# 'concord': convert_bochk,
 		'ffx': partial(converter, bochk_outputCsv),
-		'greenblue': convert_greenblue,
+		'greenblue': convert_bochk_new,
 		'dif': convert_dif,
 		'macau balanced fund': convert_dif,
 		'macau guarantee fund': convert_dif,
