@@ -314,7 +314,7 @@ def convert_dif(file_list, output_dir, pass_list, fail_list):
 		port_values = {}
 		try:
 			output = open_dif(filename, port_values, output_dir, get_filename_prefix(filename, ''))
-			validate_and_upload(port_values)
+			# validate_and_upload(port_values)
 			output_list = output_list + output
 		except:
 			logger.exception('convert_dif()')
