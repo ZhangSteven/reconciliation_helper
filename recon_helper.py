@@ -37,7 +37,7 @@ from nomura.main import outputCsv as nomura_outputCsv
 from cmbc.main import outputCsv as cmbc_outputCsv
 from bochk_revised.main import outputCsv as bochk_outputCsv
 from bochk_revised2.main import doOutput as bochk_outputCsvNew
-from webservice_client.nav import upload_nav
+# from webservice_client.nav import upload_nav
 
 import logging
 logger = logging.getLogger(__name__)
@@ -510,21 +510,21 @@ def show_result(result, upload_result):
 # 		logger.error('validate_and_upload(): validation failed, nav={0}, units={1}, unit price={2}'.
 # 						format(port_values['nav'], port_values['number_of_units'], port_values['unit_price']))
 
-def validate_and_upload(port_values):
-	"""
-	Validate the nav, num_units, unit price for the daily funds:
-	19437, 30003, 30004
-	"""
-	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio']))
+# def validate_and_upload(port_values):
+# 	"""
+# 	Validate the nav, num_units, unit price for the daily funds:
+# 	19437, 30003, 30004
+# 	"""
+# 	logger.info('validate_and_upload(): portfolio {0}'.format(port_values['portfolio']))
 
-	if upload_nav(port_values['portfolio'], port_values['nav'],
-				port_values['valuation_date'], port_values['number_of_units'],
-				port_values['unit_price']):
+# 	if upload_nav(port_values['portfolio'], port_values['nav'],
+# 				port_values['valuation_date'], port_values['number_of_units'],
+# 				port_values['unit_price']):
 
-		logger.debug('validate_and_upload(): upload successful.')
+# 		logger.debug('validate_and_upload(): upload successful.')
 
-	else:
-		logger.error('validate_and_upload(): upload failed.')
+# 	else:
+# 		logger.error('validate_and_upload(): upload failed.')
 
 
 
