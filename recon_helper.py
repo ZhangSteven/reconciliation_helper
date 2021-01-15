@@ -9,7 +9,7 @@ from os import listdir
 from os.path import isfile, isdir, join
 from shutil import copy2
 from functools import partial, reduce
-from itertools import filterfalse
+from itertools import filterfalse, chain
 from toolz.functoolz import compose
 from xlrd import open_workbook
 from reconciliation_helper.utility import get_current_path, \
@@ -37,6 +37,7 @@ from nomura.main import outputCsv as nomura_outputCsv
 from cmbc.main import outputCsv as cmbc_outputCsv
 from bochk_revised.main import outputCsv as bochk_outputCsv
 from bochk_revised2.main import doOutput as bochk_outputCsvNew
+from boci_trustee.position import processValuationFile as processStbfFile
 # from webservice_client.nav import upload_nav
 
 import logging
@@ -133,7 +134,8 @@ def convert(files, output_dir):
 		'ib': convert_ib,
 		'hgnh': convert_hgnh,
 		'quant fund 40006 (cmbhk)': partial(convert_cmbhk, '40006'),
-		'gf': convert_guangfa
+		'gf': convert_guangfa,
+		'short term bond fund': convert_stbf
 	}
 	result = {'pass':[], 'fail':[], 'output':[]}
 
@@ -381,6 +383,23 @@ def convert_repo(portfolio, file_list, output_dir, pass_list, fail_list):
 
 
 	return output_list
+
+
+
+def convert_stbf(file_list, output_dir, pass_list, fail_list):
+	output_list = []
+
+	for filename in file_list:
+		try:
+			output_list = chain(output_list, processStbfFile(output_dir, filename))
+
+		except:
+			logger.exception('convert_stbf(): {0}'.format(filename))
+			fail_list.append(filename)
+		else:
+			pass_list.append(filename)
+
+	return list(output_list)
 
 
 
