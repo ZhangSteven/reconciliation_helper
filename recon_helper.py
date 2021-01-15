@@ -389,7 +389,7 @@ def convert_repo(portfolio, file_list, output_dir, pass_list, fail_list):
 def convert_stbf(file_list, output_dir, pass_list, fail_list):
 	output_list = []
 
-	for filename in file_list:
+	for filename in filter(lambda fn: filename_from_path(fn).startswith('InvestValSTBF'), file_list):
 		try:
 			output_list = chain(output_list, processStbfFile(output_dir, filename))
 
