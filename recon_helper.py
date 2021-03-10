@@ -121,7 +121,7 @@ def convert(files, output_dir):
 		'star helios': convert_citi,
 		'in-house fund': convert_bochk_new,
 		'jic international': convert_bochk_new,
-		'jic-repo': partial(convert_repo, '40002'),
+		# 'jic-repo': partial(convert_repo, '40002'),
 		'global fixed income spc (cmbhk)': partial(convert_cmbhk, '40017'),
 		'global fixed income spc (pb)': partial( converter, nomura_outputCsv
 											   , filter_func=global_fixed_income_spc_filter),
